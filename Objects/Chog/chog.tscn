@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ckkegfk5bf6au" path="res://Objects/Chog/hedgehog.png" id="2_0glv0"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o4db8"]
-radius = 109.892
+radius = 116.76
 height = 318.036
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_b2vvd"]
@@ -18,15 +18,12 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Chog" type="Node2D"]
+[node name="Chog" type="CharacterBody2D"]
 position = Vector2(300, 300)
 script = ExtResource("1_la234")
 
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-rotation = 1.45037
-scale = Vector2(1, 1)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
 shape = SubResource("CapsuleShape2D_o4db8")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

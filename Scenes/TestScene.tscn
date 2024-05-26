@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5i3ud3jxqpqf"]
+
+[ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/chog.tscn" id="1_if5e7"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_nu1yr"]
+a = Vector2(-3, 651)
+b = Vector2(1158, 646)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("SegmentShape2D_nu1yr")
+
+[node name="Chog" parent="." instance=ExtResource("1_if5e7")]
