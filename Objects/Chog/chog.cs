@@ -12,7 +12,6 @@ public partial class chog : CharacterBody2D
 	
 	public float Gravity = ProjectSettings.GetSetting(GRAVITY_SETTING_LOCATION).AsSingle();
 	
-	
 	[Export]
 	public int Speed { get; set;} = 400;
 	
@@ -27,14 +26,21 @@ public partial class chog : CharacterBody2D
 	
 	public Vector2 ScreenSize;
 	
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		ScreenSize = GetViewportRect().Size;
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
+	{
+		Vector2 velocity = GetVelocity(delta);
+		Velocity = velocity;
+		
+		GetSpriteDirection(velocity);
+		MoveAndSlide();
+	}
+	
+	private Vector2 GetVelocity(double delta)
 	{
 		Vector2 velocity = Velocity;
 		velocity.Y += Gravity * (float)delta;
@@ -43,7 +49,8 @@ public partial class chog : CharacterBody2D
 		if(Input.IsActionPressed(WALK_LEFT) || Input.IsActionPressed(SPRINT_LEFT))
 		{
 			velocity.X = -Speed;	
-		} 
+		}
+		
 		if(Input.IsActionPressed(WALK_RIGHT) || Input.IsActionPressed(SPRINT_RIGHT))
 		{
 			velocity.X = Speed;	
@@ -51,16 +58,18 @@ public partial class chog : CharacterBody2D
 		
 		if(Input.IsActionJustPressed(JUMP) && IsOnFloor())
 		{
-			GD.Print("IsOnFloor called");
 			velocity.Y = JumpSpeed;
 		}
 		
-		AnimatedSprite2D animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-		animatedSprite.FlipH = velocity.X < 0;
-		
-		Velocity = velocity;
-		MoveAndSlide();
-		
+		return velocity;
 	}
 	
+	private void GetSpriteDirection(Vector2 velocity)
+	{		
+		AnimatedSprite2D animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		if(velocity.X != 0)
+		{
+			animatedSprite.FlipH = velocity.X < 0;
+		}
+	}	
 }
