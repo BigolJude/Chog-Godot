@@ -1,0 +1,23 @@
+<Dialog>
+    <Option text="What's your name?" response="I am the developer">
+        <Dialog>
+            <Option text="How old are you?" response="24 at the time of development" />
+        </Dialog>
+    </Option>
+    <Option text="What's going on?" response="You are in a test scene of a game">
+        <Dialog>
+            <Option text="How did I get here?" response="I put you here!" />
+            <Option text="What am I doing here?" response="Waiting till the game is made.">
+                <Dialog>
+                        <Option text="What game?" response="Chog! The developer wanted to make a language learning tool to help his progress.">
+                            <Dialog>
+                                <Option text="What language?" response="Lithuanian."/>
+                                <Option text="What's the gameplay?" response="To answer and understand questions and puzzles in the Lithuanian language.">
+                            </Dialog>
+                        </Option>
+                </Dialog>
+            </Option>
+        </Dialog>
+    </Option>
+    <Option text="Goodbye!" response="See you soon!" type="exit"></Option>
+</Dialog> 

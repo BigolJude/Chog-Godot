@@ -7,6 +7,9 @@ public partial class Interaction : Area2D
 	private const string INTERACTION = "interact";
 	
 	[Export]
+	public string Name { get; set; } = String.Empty;
+	
+	[Export]
 	public string Description { get; set; } = String.Empty;
 		
 	[Signal]
