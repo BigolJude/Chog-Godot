@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://b5i3ud3jxqpqf"]
+[gd_scene load_steps=7 format=3 uid="uid://b5i3ud3jxqpqf"]
 
 [ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/chog.tscn" id="1_if5e7"]
 [ext_resource type="Script" path="res://Scenes/Logic/Interaction.cs" id="2_jek1g"]
@@ -9,6 +9,9 @@ a = Vector2(-3, 651)
 b = Vector2(1158, 646)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ntbf2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_apmgi"]
+bg_color = Color(0.203922, 0.203922, 0.203922, 0.592157)
 
 [node name="Node2D" type="Node2D"]
 
@@ -72,6 +75,10 @@ grow_vertical = 0
 
 [node name="Label" type="Label" parent="Control/ChatBoxVContainer"]
 layout_mode = 2
+theme_type_variation = &"TooltipLabel"
+theme_override_styles/normal = SubResource("StyleBoxFlat_apmgi")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ItemList" type="ItemList" parent="Control/ChatBoxVContainer"]
 layout_mode = 2
@@ -81,3 +88,4 @@ layout_mode = 2
 [connection signal="OnLeave" from="Chat_Interaction" to="Control" method="OnInteractionLeave"]
 [connection signal="body_entered" from="Chat_Interaction" to="Chat_Interaction" method="OnBodyEntered"]
 [connection signal="body_exited" from="Chat_Interaction" to="Chat_Interaction" method="OnBodyExited"]
+[connection signal="item_selected" from="Control/ChatBoxVContainer/ItemList" to="Control" method="OnItemListSelected"]
