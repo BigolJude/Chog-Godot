@@ -119,13 +119,20 @@ public partial class UI : Control
 		{
 			if(dialog.Text == chatList.GetItemText((int)index))
 			{
+				GD.Print(dialog.Type);
+				if(dialog.Type == DialogType.Exit)
+				{
+					ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
+					DialogDepth = new int []{};
+					return;
+				}
 				DialogDepth = dialog.Depth;
 				Label chatBoxLabel = GetNode<Label>(CHATBOX_LABEL);
 				chatBoxLabel.Text = dialog.Response;
 				break;
-			}
-			
+			}	
 		}
+		
 		chatList.Clear();
 		DisplayDialogOptions();
 	}
@@ -168,7 +175,20 @@ public partial class UI : Control
 							i++;
 						}
 						Array.Reverse(array);
-						dialogOptions.Add(new Dialog(array, text, response));
+						if(parser.GetAttributeCount() == 3)
+						{
+							DialogType type;
+							if (!Enum.TryParse<DialogType>(parser.GetAttributeValue(2), out type))
+							{
+								GD.Print("Something went wrong while parsing DialogType");
+							}
+
+							dialogOptions.Add(new Dialog(array, text, response, type));
+						}
+						else
+						{
+							dialogOptions.Add(new Dialog(array, text, response));
+						}
 						break;
 					}
 				}
@@ -187,7 +207,7 @@ public partial class UI : Control
 		CurrentDialog = dialogOptions;
 	}
 	
-	// For debug purposes.
+	// Okay no longer for debug purposes but I need to look into the 
 	private string PrintArray(int [] array)
 	{
 		string [] stringArray = new string [array.Length];
@@ -204,13 +224,31 @@ public class Dialog
 	public int [] Depth { get; }
 	public string Text { get; }
 	public string Response { get; }
+	public DialogType Type{ get;}
 	
 	public Dialog (int [] mDepth, string mText, string mResponse)
 	{
 		this.Depth = mDepth; 
 		this.Text = mText;
 		this.Response = mResponse;
+		this.Type = DialogType.None;
 	}
+	
+	public Dialog (int [] mDepth, string mText, string mResponse, DialogType mType)
+	{
+		this.Depth = mDepth; 
+		this.Text = mText;
+		this.Response = mResponse;
+		this.Type = mType;
+	}
+}
+
+// Used for events within dialog eg. Exiting or Triggering
+public enum DialogType
+{
+	None = 0,
+	Exit = 1,
+	Event = 2
 }
 
 public enum InteractionType
