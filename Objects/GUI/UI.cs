@@ -19,7 +19,7 @@ public partial class UI : Control
 	private const bool SHOW = true;
 	
 	//TODO - Don't like the name of this change it.
-	private InteractionType IType = InteractionType.None;
+	private InteractionType Type = InteractionType.None;
 	
 	// Dialog things
 	private int [] DialogDepth = {};
@@ -50,11 +50,11 @@ public partial class UI : Control
 		
 	private void OnInteraction(string InteractionDescription)
 	{
-		IType = InteractionType.Dialog;
+		Type = InteractionType.Dialog;
 		ChangeControlNodeVisibility(INTERACTION_LABEL, HIDE);
 		ChangeControlNodeVisibility(CHATBOX_CONTAINER, SHOW);
 		ParseDialogXml(InteractionDescription);
-		switch (IType)
+		switch (Type)
 		{
 			case (InteractionType.Dialog):
 			{
@@ -257,5 +257,3 @@ public enum InteractionType
 	Dialog = 1,
 	Move = 2
 }
-
-

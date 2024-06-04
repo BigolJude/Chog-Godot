@@ -1,0 +1,61 @@
+[gd_scene load_steps=3 format=3 uid="uid://b101bqfrnsrqk"]
+
+[ext_resource type="Script" path="res://Objects/GUI/UI.cs" id="1_qo7yo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_apmgi"]
+bg_color = Color(0.203922, 0.203922, 0.203922, 0.592157)
+
+[node name="GUI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1154.0
+offset_bottom = 654.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+script = ExtResource("1_qo7yo")
+
+[node name="InteractionHContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -77.0
+offset_top = -43.0
+offset_right = 77.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="InteractionHContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Press F to interact."
+
+[node name="ChatBoxVContainer" type="VSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -134.0
+offset_right = 340.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="ChatBoxVContainer"]
+layout_mode = 2
+theme_type_variation = &"TooltipLabel"
+theme_override_styles/normal = SubResource("StyleBoxFlat_apmgi")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ItemList" type="ItemList" parent="ChatBoxVContainer"]
+layout_mode = 2
+
+[connection signal="item_selected" from="ChatBoxVContainer/ItemList" to="." method="OnItemListSelected"]
