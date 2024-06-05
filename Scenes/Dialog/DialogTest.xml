@@ -2,11 +2,6 @@
     <Option text="What's your name?" response="I am the developer">
         <Dialog>
             <Option text="How old are you?" response="24 at the time of development" />
-            <Option text="What's your actual name?" response="sequit.">
-                <Dialog>
-                    <Option text="Goo onnn! Pwease? :>" response="Well okay then. My name is Jude."></Option>
-                </Dialog>
-            </Option>
         </Dialog>
     </Option>
     <Option text="What's going on?" response="You are in a test scene of a game">
@@ -16,13 +11,21 @@
                 <Dialog>
                     <Option text="What game?" response="Chog! The developer wanted to make a language learning tool to help his progress.">
                         <Dialog>
-                            <Option text="What language?" response="Lithuanian."/>
-                            <Option text="What's the gameplay?" response="To answer and understand questions and puzzles in the Lithuanian language.">
+                            <Option text="What's the gameplay?" response="To answer and understand questions and puzzles in a different language.">
+                                <Dialog>
+                                    <Option text="Right." response="Would you like to play?">
+                                        <Dialog>
+                                            <Option text="Sure" response="Okay. Go over to the tree and interact with it." type="Event" event="spawn_tree" />
+                                            <Option text="No right now." response="Okay. No problem" type="Exit" />
+                                        </Dialog>
+                                    </Option>
+                                </Dialog>
+                            </Option>
                         </Dialog>
                     </Option>
                 </Dialog>
             </Option>
         </Dialog>
     </Option>
-    <Option text="Goodbye!" response="See you soon!" type="Exit"></Option>
+    <Option text="Goodbye!" response="See you soon!" type="Exit" />
 </Dialog> 

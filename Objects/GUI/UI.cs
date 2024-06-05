@@ -10,6 +10,7 @@ public partial class UI : Control
 	private const string XML_ELEMENT_OPTION = "Option";
 	private const string DIALOG_FOLDER = "res://Scenes/Dialog/";
 	private const string INTERACTION_LABEL = "InteractionHContainer/Label";
+	private const string INTERACTION_LABEL_TEXT = "Press F to {0}.";
 	private const string CHATBOX_CONTAINER = "ChatBoxVContainer";
 	private const string CHATBOX_ITEMLIST = CHATBOX_CONTAINER + "/" + "ItemList";
 	private const string CHATBOX_LABEL = CHATBOX_CONTAINER + "/" + "Label";
@@ -19,11 +20,14 @@ public partial class UI : Control
 	private const bool SHOW = true;
 	
 	//TODO - Don't like the name of this change it.
-	private InteractionType Type = InteractionType.None;
+	private InteractionType IType = InteractionType.None;
 	
 	// Dialog things
 	private int [] DialogDepth = {};
 	private List<Dialog> CurrentDialog;
+	
+	[Signal]
+	public delegate void OnInteractionEventEventHandler(string Event);
 	
 	public override void _Ready()
 	{
@@ -37,9 +41,11 @@ public partial class UI : Control
 	{
 	}
 	
-	private void OnInteractionEnter()
+	private void OnInteractionEnter(string InteractionName)
 	{
-		ChangeControlNodeVisibility(INTERACTION_LABEL, SHOW);
+		Label label = GetNode<Label>(INTERACTION_LABEL);
+		label.Text = string.Format(INTERACTION_LABEL_TEXT, InteractionName);
+		label.Show();
 	}
 	
 	private void OnInteractionLeave()
@@ -50,11 +56,12 @@ public partial class UI : Control
 		
 	private void OnInteraction(string InteractionDescription)
 	{
-		Type = InteractionType.Dialog;
+		IType = InteractionType.Dialog;
 		ChangeControlNodeVisibility(INTERACTION_LABEL, HIDE);
 		ChangeControlNodeVisibility(CHATBOX_CONTAINER, SHOW);
 		ParseDialogXml(InteractionDescription);
-		switch (Type)
+		
+		switch (IType)
 		{
 			case (InteractionType.Dialog):
 			{
@@ -70,7 +77,7 @@ public partial class UI : Control
 	
 	private void DisplayDialogOptions()
 	{
-		ItemList chatList = GetNode<ItemList>("ChatBoxVContainer/ItemList");
+		ItemList chatList = GetNode<ItemList>(CHATBOX_ITEMLIST);
 		foreach(Dialog dialog in CurrentDialog)
 		{	
 			// Weird fix but for some painful reason int[] that have the same contents won't evaluate as equal.
@@ -80,9 +87,6 @@ public partial class UI : Control
 				|| (DialogDepth.Length == 0
 				&& dialog.Depth.Length == 1))
 			{
-				GD.Print(dialog.Text);
-				GD.Print(PrintArray(DialogDepth));
-				GD.Print(PrintArray(dialog.Depth.Take(DialogDepth.Length).ToArray()));
 				chatList.AddItem(dialog.Text);
 			}
 		}
@@ -106,7 +110,7 @@ public partial class UI : Control
 	
 	private void OnItemListSelected(long index)
 	{
-		ItemList chatList = GetNode<ItemList>("ChatBoxVContainer/ItemList");
+		ItemList chatList = GetNode<ItemList>(CHATBOX_ITEMLIST);
 		if(chatList.GetItemText((int)index) == BACK_OPTION)
 		{
 			DialogDepth = DialogDepth.ToList().Take(DialogDepth.Length - 1).ToArray();
@@ -119,20 +123,31 @@ public partial class UI : Control
 		{
 			if(dialog.Text == chatList.GetItemText((int)index))
 			{
-				GD.Print(dialog.Type);
-				if(dialog.Type == DialogType.Exit)
+				switch(dialog.Type) 
 				{
-					ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
-					DialogDepth = new int []{};
-					return;
+					case (DialogType.Exit):
+					{
+						ResetDialog();
+						return;
+					}
+					case (DialogType.Event):
+					{
+						DialogEvent dialogEvent = (DialogEvent)dialog;
+						ResetDialog();
+						EmitSignal(SignalName.OnInteractionEvent, dialogEvent.Event);
+						GD.Print("Dialog event triggerred: " + dialogEvent.Event);
+						return;
+					}
 				}
-				DialogDepth = dialog.Depth;
-				Label chatBoxLabel = GetNode<Label>(CHATBOX_LABEL);
-				chatBoxLabel.Text = dialog.Response;
-				break;
+				if(dialog.Type == DialogType.None)
+				{
+					DialogDepth = dialog.Depth;
+					Label chatBoxLabel = GetNode<Label>(CHATBOX_LABEL);
+					chatBoxLabel.Text = dialog.Response;
+					break;
+				}
 			}	
 		}
-		
 		chatList.Clear();
 		DisplayDialogOptions();
 	}
@@ -175,15 +190,23 @@ public partial class UI : Control
 							i++;
 						}
 						Array.Reverse(array);
-						if(parser.GetAttributeCount() == 3)
+						if(parser.GetAttributeCount() >= 3)
 						{
 							DialogType type;
 							if (!Enum.TryParse<DialogType>(parser.GetAttributeValue(2), out type))
 							{
 								GD.Print("Something went wrong while parsing DialogType");
 							}
-
-							dialogOptions.Add(new Dialog(array, text, response, type));
+							
+							if (type == DialogType.Event)
+							{
+								string eventText = parser.GetAttributeValue(3);
+								dialogOptions.Add(new DialogEvent(array, text, response, type, eventText));
+							}
+							else
+							{
+								dialogOptions.Add(new Dialog(array, text, response, type));
+							}
 						}
 						else
 						{
@@ -205,6 +228,12 @@ public partial class UI : Control
 			}
 		}
 		CurrentDialog = dialogOptions;
+	}
+	
+	private void ResetDialog()
+	{
+		ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
+		DialogDepth = new int []{};
 	}
 	
 	// Okay no longer for debug purposes but I need to look into the 
@@ -240,6 +269,16 @@ public class Dialog
 		this.Text = mText;
 		this.Response = mResponse;
 		this.Type = mType;
+	}
+}
+
+public class DialogEvent : Dialog
+{
+	public string Event { get; }
+	
+	public DialogEvent(int [] mDepth, string mText, string mResponse, DialogType mType, string mEvent) : base(mDepth, mText, mResponse, mType)
+	{
+		Event = mEvent;
 	}
 }
 

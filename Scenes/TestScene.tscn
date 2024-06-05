@@ -22,7 +22,7 @@ shape = SubResource("SegmentShape2D_nu1yr")
 [node name="Chat_Interaction" type="Area2D" parent="."]
 position = Vector2(600, 500)
 script = ExtResource("2_jek1g")
-Name = "TestDialogName"
+Name = "chat with me"
 Description = "DialogTest"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chat_Interaction"]

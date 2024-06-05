@@ -13,7 +13,7 @@ public partial class Interaction : Area2D
 	public string Description { get; set; } = String.Empty;
 		
 	[Signal]
-	public delegate void OnEnterEventHandler();
+	public delegate void OnEnterEventHandler(string InteractionName);
 
 	[Signal]
 	public delegate void OnLeaveEventHandler();
@@ -32,13 +32,12 @@ public partial class Interaction : Area2D
 		if(Input.IsActionJustPressed(INTERACTION))
 		{
 			EmitSignal(SignalName.OnInteraction, Description);
-			GD.Print("F Pressed");
 		}
 	}
 	
 	private void OnBodyEntered(Node2D body)
 	{
-		EmitSignal(SignalName.OnEnter);	
+		EmitSignal(SignalName.OnEnter, Name);	
 	}
 	
 	private void OnBodyExited(Node2D body)
