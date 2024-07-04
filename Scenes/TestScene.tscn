@@ -1,14 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://b5i3ud3jxqpqf"]
+[gd_scene load_steps=8 format=3 uid="uid://b5i3ud3jxqpqf"]
 
 [ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/chog.tscn" id="1_if5e7"]
-[ext_resource type="Script" path="res://Scenes/Logic/Interaction.cs" id="2_jek1g"]
+[ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Scenes/Logic/DialogInteraction.tscn" id="2_ltp8n"]
 [ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="3_ead52"]
+[ext_resource type="Script" path="res://Scenes/Logic/Event.cs" id="4_8k12s"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_nu1yr"]
 a = Vector2(-3, 651)
 b = Vector2(1158, 646)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ntbf2"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ul67n"]
+size = Vector2(50, 500)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_sb1t5"]
 
 [node name="Node2D" type="Node2D"]
 
@@ -19,19 +23,25 @@ shape = SubResource("SegmentShape2D_nu1yr")
 
 [node name="Chog" parent="." instance=ExtResource("1_if5e7")]
 
-[node name="Chat_Interaction" type="Area2D" parent="."]
-position = Vector2(600, 500)
-script = ExtResource("2_jek1g")
-Name = "chat with me"
-Description = "DialogTest"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Chat_Interaction"]
-shape = SubResource("RectangleShape2D_ntbf2")
-
 [node name="GUI" parent="." instance=ExtResource("3_ead52")]
 
-[connection signal="OnEnter" from="Chat_Interaction" to="GUI" method="OnInteractionEnter"]
-[connection signal="OnInteraction" from="Chat_Interaction" to="GUI" method="OnInteraction"]
-[connection signal="OnLeave" from="Chat_Interaction" to="GUI" method="OnInteractionLeave"]
-[connection signal="body_entered" from="Chat_Interaction" to="Chat_Interaction" method="OnBodyEntered"]
-[connection signal="body_exited" from="Chat_Interaction" to="Chat_Interaction" method="OnBodyExited"]
+[node name="Tree" type="StaticBody2D" parent="."]
+position = Vector2(1100, 400)
+script = ExtResource("4_8k12s")
+TriggerValue = "spawn_tree"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Tree"]
+shape = SubResource("RectangleShape2D_ul67n")
+
+[node name="Polygon2D" type="Polygon2D" parent="Tree"]
+color = Color(0.489524, 0.1633, 0, 1)
+texture = SubResource("PlaceholderTexture2D_sb1t5")
+polygon = PackedVector2Array(25, 250, -25, 250, -25, -250, 25, -250)
+
+[node name="DialogInteraction" parent="Tree" instance=ExtResource("2_ltp8n")]
+
+[node name="DialogInteraction" parent="." instance=ExtResource("2_ltp8n")]
+Name = "chat with the developer"
+Description = "DialogTest"
+
+[connection signal="OnInteractionEvent" from="GUI" to="Tree" method="OnEvent"]

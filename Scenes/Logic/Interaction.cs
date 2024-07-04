@@ -24,6 +24,13 @@ public partial class Interaction : Area2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		GUI gui = GetNode<GUI>("/root/Node2D/GUI");
+		Callable onEnter = Callable.From(() => gui.OnInteractionEnter(Name));
+		Callable onLeave = Callable.From(() => gui.OnInteractionLeave());
+		Callable onInteraction = Callable.From(() => gui.OnInteraction(Description));
+		Connect(SignalName.OnEnter, onEnter);
+		Connect(SignalName.OnLeave, onLeave);
+		Connect(SignalName.OnInteraction, onInteraction);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -31,13 +38,13 @@ public partial class Interaction : Area2D
 	{
 		if(Input.IsActionJustPressed(INTERACTION))
 		{
-			EmitSignal(SignalName.OnInteraction, Description);
+			EmitSignal(SignalName.OnInteraction);
 		}
 	}
 	
 	private void OnBodyEntered(Node2D body)
 	{
-		EmitSignal(SignalName.OnEnter, Name);	
+		EmitSignal(SignalName.OnEnter);	
 	}
 	
 	private void OnBodyExited(Node2D body)

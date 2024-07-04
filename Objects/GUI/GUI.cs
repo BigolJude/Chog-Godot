@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public partial class UI : Control
+public partial class GUI : Control
 {
 	private const string XML_ELEMENT_DIALOG = "Dialog";
 	private const string XML_ELEMENT_OPTION = "Option";
@@ -41,20 +41,20 @@ public partial class UI : Control
 	{
 	}
 	
-	private void OnInteractionEnter(string InteractionName)
+	public void OnInteractionEnter(string InteractionName)
 	{
 		Label label = GetNode<Label>(INTERACTION_LABEL);
 		label.Text = string.Format(INTERACTION_LABEL_TEXT, InteractionName);
 		label.Show();
 	}
 	
-	private void OnInteractionLeave()
+	public void OnInteractionLeave()
 	{
 		ChangeControlNodeVisibility(INTERACTION_LABEL, HIDE);
 		ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
 	}
 		
-	private void OnInteraction(string InteractionDescription)
+	public void OnInteraction(string InteractionDescription)
 	{
 		IType = InteractionType.Dialog;
 		ChangeControlNodeVisibility(INTERACTION_LABEL, HIDE);

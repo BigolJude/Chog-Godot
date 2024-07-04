@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b101bqfrnsrqk"]
 
-[ext_resource type="Script" path="res://Objects/GUI/UI.cs" id="1_qo7yo"]
+[ext_resource type="Script" path="res://Objects/GUI/GUI.cs" id="1_my2vy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_apmgi"]
 bg_color = Color(0.203922, 0.203922, 0.203922, 0.592157)
@@ -12,7 +12,7 @@ offset_right = 1154.0
 offset_bottom = 654.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-script = ExtResource("1_qo7yo")
+script = ExtResource("1_my2vy")
 
 [node name="InteractionHContainer" type="HSplitContainer" parent="."]
 layout_mode = 1
