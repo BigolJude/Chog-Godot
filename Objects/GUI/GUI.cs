@@ -73,6 +73,7 @@ public partial class GUI : Control
 	{
 		ChangeControlNodeVisibility(INTERACTION_LABEL, HIDE);
 		ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
+		ResetDialog();
 	}
 		
 	public void OnInteraction(string InteractionDescription)
@@ -166,8 +167,8 @@ public partial class GUI : Control
 				}
 				if(dialog.Type == DialogType.None)
 				{
-					
 					GetNode<Label>(CHATBOX_LABEL).Text = string.Empty;
+					CurrentDialogText = string.Empty;
 					DialogDepth = dialog.Depth;
 					ExpectedDialogText = dialog.Response;
 					GetNode<Timer>(DIALOG_SCROLL_DELAY_TIMER).Start();
@@ -261,7 +262,11 @@ public partial class GUI : Control
 	private void ResetDialog()
 	{
 		ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
+		GetNode<ItemList>(CHATBOX_ITEMLIST).Clear();
 		DialogDepth = new int []{};
+		CurrentDialogText = string.Empty;
+		ExpectedDialogText = string.Empty;
+		GetNode<Label>(CHATBOX_LABEL).Text = string.Empty;
 	}
 	
 	// Okay no longer for debug purposes but I need to look into the 
