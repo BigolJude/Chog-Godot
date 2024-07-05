@@ -3,7 +3,6 @@ using System;
 
 public partial class Interaction : Area2D
 {
-	
 	private const string INTERACTION = "interact";
 	
 	[Export]
@@ -26,10 +25,12 @@ public partial class Interaction : Area2D
 	{
 		GUI gui = GetNode<GUI>("/root/Node2D/GUI");
 		Callable onEnter = Callable.From(() => gui.OnInteractionEnter(Name));
-		Callable onLeave = Callable.From(() => gui.OnInteractionLeave());
-		Callable onInteraction = Callable.From(() => gui.OnInteraction(Description));
 		Connect(SignalName.OnEnter, onEnter);
+		
+		Callable onLeave = Callable.From(() => gui.OnInteractionLeave());
 		Connect(SignalName.OnLeave, onLeave);
+		
+		Callable onInteraction = Callable.From(() => gui.OnInteraction(Description));
 		Connect(SignalName.OnInteraction, onInteraction);
 	}
 

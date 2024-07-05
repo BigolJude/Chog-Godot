@@ -39,6 +39,8 @@ texture = SubResource("PlaceholderTexture2D_sb1t5")
 polygon = PackedVector2Array(25, 250, -25, 250, -25, -250, 25, -250)
 
 [node name="DialogInteraction" parent="Tree" instance=ExtResource("2_ltp8n")]
+Name = "penis"
+Description = "DialogTest"
 
 [node name="DialogInteraction" parent="." instance=ExtResource("2_ltp8n")]
 Name = "chat with the developer"

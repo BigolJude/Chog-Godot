@@ -58,4 +58,8 @@ vertical_alignment = 1
 [node name="ItemList" type="ItemList" parent="ChatBoxVContainer"]
 layout_mode = 2
 
+[node name="DialogScrollDelay" type="Timer" parent="ChatBoxVContainer"]
+wait_time = 0.05
+
 [connection signal="item_selected" from="ChatBoxVContainer/ItemList" to="." method="OnItemListSelected"]
+[connection signal="timeout" from="ChatBoxVContainer/DialogScrollDelay" to="." method="OnDialogScrollDelayTimeout"]

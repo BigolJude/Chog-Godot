@@ -10,14 +10,17 @@ public partial class GUI : Control
 	private const string XML_ELEMENT_OPTION = "Option";
 	private const string DIALOG_FOLDER = "res://Scenes/Dialog/";
 	private const string INTERACTION_LABEL = "InteractionHContainer/Label";
-	private const string INTERACTION_LABEL_TEXT = "Press F to {0}.";
 	private const string CHATBOX_CONTAINER = "ChatBoxVContainer";
 	private const string CHATBOX_ITEMLIST = CHATBOX_CONTAINER + "/" + "ItemList";
+	private const string DIALOG_SCROLL_DELAY_TIMER = CHATBOX_CONTAINER + "/" + "DialogScrollDelay";
 	private const string CHATBOX_LABEL = CHATBOX_CONTAINER + "/" + "Label";
 	private const string XML_SUFFIX = ".xml";
-	private const string BACK_OPTION = "Back";
 	private const bool HIDE = false;
 	private const bool SHOW = true;
+	
+	// These options need to be in some strongly typed folder for language options.
+	private const string INTERACTION_LABEL_TEXT = "Press F to {0}.";
+	private const string BACK_OPTION = "Back";
 	
 	//TODO - Don't like the name of this change it.
 	private InteractionType IType = InteractionType.None;
@@ -25,6 +28,8 @@ public partial class GUI : Control
 	// Dialog things
 	private int [] DialogDepth = {};
 	private List<Dialog> CurrentDialog;
+	private string ExpectedDialogText = "";
+	private string CurrentDialogText = "";
 	
 	[Signal]
 	public delegate void OnInteractionEventEventHandler(string Event);
@@ -39,6 +44,22 @@ public partial class GUI : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+	}
+	
+	private void OnDialogScrollDelayTimeout()
+	{
+		if (CurrentDialogText.Length != ExpectedDialogText.Length)
+		{
+			CurrentDialogText += ExpectedDialogText[CurrentDialogText.Length];
+			Label chatBoxLabel = GetNode<Label>(CHATBOX_LABEL);
+			chatBoxLabel.Text = CurrentDialogText;
+		}
+		else
+		{
+			CurrentDialogText = string.Empty;
+			ExpectedDialogText = string.Empty;
+			GetNode<Timer>(DIALOG_SCROLL_DELAY_TIMER).Stop();
+		}
 	}
 	
 	public void OnInteractionEnter(string InteractionName)
@@ -81,11 +102,7 @@ public partial class GUI : Control
 		foreach(Dialog dialog in CurrentDialog)
 		{	
 			// Weird fix but for some painful reason int[] that have the same contents won't evaluate as equal.
-			string DialogDepthText = PrintArray(DialogDepth);
-			if((PrintArray(dialog.Depth.Take(DialogDepth.Length).ToArray()) == DialogDepthText
-				&& dialog.Depth.Length == DialogDepth.Length + 1)
-				|| (DialogDepth.Length == 0
-				&& dialog.Depth.Length == 1))
+			if(IsDialogNext(dialog))
 			{
 				chatList.AddItem(dialog.Text);
 			}
@@ -94,6 +111,14 @@ public partial class GUI : Control
 		{
 			chatList.AddItem(BACK_OPTION);
 		}
+	}
+	
+	private bool IsDialogNext(Dialog dialog)
+	{
+		return (PrintArray(dialog.Depth.Take(DialogDepth.Length).ToArray()) == PrintArray(DialogDepth)
+			   && dialog.Depth.Length == DialogDepth.Length + 1)
+			   || (DialogDepth.Length == 0
+			   && dialog.Depth.Length == 1);
 	}
 	
 	private void ChangeControlNodeVisibility(string nodeName, bool visible)
@@ -141,9 +166,12 @@ public partial class GUI : Control
 				}
 				if(dialog.Type == DialogType.None)
 				{
+					
+					GetNode<Label>(CHATBOX_LABEL).Text = string.Empty;
 					DialogDepth = dialog.Depth;
-					Label chatBoxLabel = GetNode<Label>(CHATBOX_LABEL);
-					chatBoxLabel.Text = dialog.Response;
+					ExpectedDialogText = dialog.Response;
+					GetNode<Timer>(DIALOG_SCROLL_DELAY_TIMER).Start();
+					GD.Print(ExpectedDialogText);
 					break;
 				}
 			}	
