@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://b5i3ud3jxqpqf"]
+[gd_scene load_steps=9 format=3 uid="uid://b5i3ud3jxqpqf"]
 
 [ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/chog.tscn" id="1_if5e7"]
-[ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Scenes/Logic/DialogInteraction.tscn" id="2_ltp8n"]
+[ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="2_ltp8n"]
 [ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="3_ead52"]
 [ext_resource type="Script" path="res://Scenes/Logic/Event.cs" id="4_8k12s"]
+[ext_resource type="PackedScene" uid="uid://bw3t277q0nyhr" path="res://Objects/Interactions/Entrance.tscn" id="5_xs662"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_nu1yr"]
 a = Vector2(-3, 651)
@@ -24,6 +25,7 @@ shape = SubResource("SegmentShape2D_nu1yr")
 [node name="Chog" parent="." instance=ExtResource("1_if5e7")]
 
 [node name="GUI" parent="." instance=ExtResource("3_ead52")]
+metadata/_edit_use_anchors_ = true
 
 [node name="Tree" type="StaticBody2D" parent="."]
 position = Vector2(1100, 400)
@@ -43,7 +45,22 @@ Name = "penis"
 Description = "DialogTest"
 
 [node name="DialogInteraction" parent="." instance=ExtResource("2_ltp8n")]
-Name = "chat with the developer"
+Name = "chat with me!"
+Type = 1
 Description = "DialogTest"
+
+[node name="Label" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 2.0
+offset_right = 73.0
+offset_bottom = 31.0
+text = "Scene 1"
+metadata/_edit_use_anchors_ = true
+
+[node name="Entrance" parent="." instance=ExtResource("5_xs662")]
+position = Vector2(932, 555)
+Name = "enter scene 2"
+Type = 2
+Description = "TestScene2"
 
 [connection signal="OnInteractionEvent" from="GUI" to="Tree" method="OnEvent"]

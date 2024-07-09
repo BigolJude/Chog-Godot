@@ -8,13 +8,15 @@ public partial class GUI : Control
 {
 	private const string XML_ELEMENT_DIALOG = "Dialog";
 	private const string XML_ELEMENT_OPTION = "Option";
-	private const string DIALOG_FOLDER = "res://Scenes/Dialog/";
+	private const string SCENE_FOLDER = "res://Scenes/";
+	private const string DIALOG_FOLDER = SCENE_FOLDER + "Dialog/";
 	private const string INTERACTION_LABEL = "InteractionHContainer/Label";
 	private const string CHATBOX_CONTAINER = "ChatBoxVContainer";
 	private const string CHATBOX_ITEMLIST = CHATBOX_CONTAINER + "/" + "ItemList";
 	private const string DIALOG_SCROLL_DELAY_TIMER = CHATBOX_CONTAINER + "/" + "DialogScrollDelay";
 	private const string CHATBOX_LABEL = CHATBOX_CONTAINER + "/" + "Label";
 	private const string XML_SUFFIX = ".xml";
+	private const string SCENE_SUFFIX = ".tscn";
 	private const bool HIDE = false;
 	private const bool SHOW = true;
 	
@@ -62,10 +64,10 @@ public partial class GUI : Control
 		}
 	}
 	
-	public void OnInteractionEnter(string InteractionName)
+	public void OnInteractionEnter(string interactionName)
 	{
 		Label label = GetNode<Label>(INTERACTION_LABEL);
-		label.Text = string.Format(INTERACTION_LABEL_TEXT, InteractionName);
+		label.Text = string.Format(INTERACTION_LABEL_TEXT, interactionName);
 		label.Show();
 	}
 	
@@ -76,22 +78,22 @@ public partial class GUI : Control
 		ResetDialog();
 	}
 		
-	public void OnInteraction(string InteractionDescription)
+	public void OnInteraction(InteractionType type, string interactionDescription)
 	{
-		IType = InteractionType.Dialog;
 		ChangeControlNodeVisibility(INTERACTION_LABEL, HIDE);
-		ChangeControlNodeVisibility(CHATBOX_CONTAINER, SHOW);
-		ParseDialogXml(InteractionDescription);
-		
-		switch (IType)
+		switch (type)
 		{
 			case (InteractionType.Dialog):
 			{
+				ChangeControlNodeVisibility(CHATBOX_CONTAINER, SHOW);
+				ParseDialogXml(interactionDescription);
 				DisplayDialogOptions();
 				break;
 			}
-			case (InteractionType.Move):
+			case (InteractionType.Entrance):
 			{
+				PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + interactionDescription + SCENE_SUFFIX);
+				GetTree().ChangeSceneToPacked(scene);
 				break;
 			}
 		}
@@ -279,53 +281,4 @@ public partial class GUI : Control
 		}
 		return("[" + String.Join(", ", stringArray) + "]");
 	}
-}
-
-public class Dialog
-{
-	public int [] Depth { get; }
-	public string Text { get; }
-	public string Response { get; }
-	public DialogType Type{ get;}
-	
-	public Dialog (int [] mDepth, string mText, string mResponse)
-	{
-		this.Depth = mDepth; 
-		this.Text = mText;
-		this.Response = mResponse;
-		this.Type = DialogType.None;
-	}
-	
-	public Dialog (int [] mDepth, string mText, string mResponse, DialogType mType)
-	{
-		this.Depth = mDepth; 
-		this.Text = mText;
-		this.Response = mResponse;
-		this.Type = mType;
-	}
-}
-
-public class DialogEvent : Dialog
-{
-	public string Event { get; }
-	
-	public DialogEvent(int [] mDepth, string mText, string mResponse, DialogType mType, string mEvent) : base(mDepth, mText, mResponse, mType)
-	{
-		Event = mEvent;
-	}
-}
-
-// Used for events within dialog eg. Exiting or Triggering
-public enum DialogType
-{
-	None = 0,
-	Exit = 1,
-	Event = 2
-}
-
-public enum InteractionType
-{
-	None = 0,
-	Dialog = 1,
-	Move = 2
 }

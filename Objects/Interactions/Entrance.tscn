@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://bw3t277q0nyhr"]
+
+[ext_resource type="Script" path="res://Objects/Interactions/Interaction.cs" id="1_v76kr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q58r8"]
+size = Vector2(100, 125)
+
+[node name="Entrance" type="Area2D"]
+script = ExtResource("1_v76kr")
+Name = "enter "
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(50, -75, 50, 50, -50, 50, -50, -75)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -12.5)
+shape = SubResource("RectangleShape2D_q58r8")
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]
+[connection signal="body_exited" from="." to="." method="OnBodyExited"]

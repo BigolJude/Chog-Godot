@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://d3amlik2mbnk6"]
+
+[ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/chog.tscn" id="1_u2shf"]
+[ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="2_7h0rb"]
+[ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="3_d08ew"]
+[ext_resource type="PackedScene" uid="uid://bw3t277q0nyhr" path="res://Objects/Interactions/Entrance.tscn" id="4_xpfk2"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_nu1yr"]
+a = Vector2(-3, 651)
+b = Vector2(1158, 646)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("SegmentShape2D_nu1yr")
+
+[node name="Chog" parent="." instance=ExtResource("1_u2shf")]
+
+[node name="GUI" parent="." instance=ExtResource("2_7h0rb")]
+metadata/_edit_use_anchors_ = true
+
+[node name="DialogInteraction" parent="." instance=ExtResource("3_d08ew")]
+Name = "chat with me!"
+Type = 1
+Description = "DialogTest"
+
+[node name="Label" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 2.0
+offset_right = 73.0
+offset_bottom = 31.0
+text = "Scene 2"
+metadata/_edit_use_anchors_ = true
+
+[node name="Entrance" parent="." instance=ExtResource("4_xpfk2")]
+position = Vector2(997, 590)
+Name = "enter Scene 1"
+Type = 2
+Description = "TestScene"
