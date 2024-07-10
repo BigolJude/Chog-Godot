@@ -23,13 +23,25 @@ public partial class chog : CharacterBody2D
 	
 	[Signal]
 	public delegate void HitEventHandler();
+
+	[Signal]
+	public delegate void NavigateLeftEventHandler();
+
+	[Signal]
+	public delegate void NavigateRightEventHandler();
 	
 	public Vector2 ScreenSize;
 	
 	public override void _Ready()
 	{
 		ScreenSize = GetViewportRect().Size;
-	}
+		SceneBase scene = GetNode<SceneBase>("/root/Node2D");
+		Callable onLeftNavigation = Callable.From(() => scene.OnLeftNavigation());
+		Connect(SignalName.NavigateLeft, onLeftNavigation);
+
+		Callable onRightNavigation = Callable.From(() => scene.OnRightNavigation());
+		Connect(SignalName.NavigateRight, onRightNavigation);
+	}	
 
 	public override void _Process(double delta)
 	{
@@ -38,6 +50,15 @@ public partial class chog : CharacterBody2D
 		
 		GetSpriteDirection(velocity);
 		MoveAndSlide();
+
+		if(Position.X > ScreenSize.X)
+		{
+			EmitSignal(SignalName.NavigateRight);
+		}
+		else if(Position.X > 0)
+		{
+			EmitSignal(SignalName.NavigateLeft);
+		}
 	}
 	
 	private Vector2 GetVelocity(double delta)

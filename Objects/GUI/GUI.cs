@@ -24,9 +24,6 @@ public partial class GUI : Control
 	private const string INTERACTION_LABEL_TEXT = "Press F to {0}.";
 	private const string BACK_OPTION = "Back";
 	
-	//TODO - Don't like the name of this change it.
-	private InteractionType IType = InteractionType.None;
-	
 	// Dialog things
 	private int [] DialogDepth = {};
 	private List<Dialog> CurrentDialog;

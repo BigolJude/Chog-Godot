@@ -16,15 +16,18 @@ b = Vector2(1158, 646)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("SegmentShape2D_nu1yr")
 
-[node name="Chog" parent="." instance=ExtResource("1_u2shf")]
+[node name="Entrance" parent="." instance=ExtResource("4_xpfk2")]
+position = Vector2(997, 590)
+Name = "enter Scene 1"
+Type = 2
+Description = "TestScene"
 
-[node name="GUI" parent="." instance=ExtResource("2_7h0rb")]
-metadata/_edit_use_anchors_ = true
+[node name="Chog" parent="." instance=ExtResource("1_u2shf")]
 
 [node name="DialogInteraction" parent="." instance=ExtResource("3_d08ew")]
 Name = "chat with me!"
 Type = 1
-Description = "DialogTest"
+Description = "DialogTest2"
 
 [node name="Label" type="Label" parent="."]
 offset_left = 8.0
@@ -34,8 +37,5 @@ offset_bottom = 31.0
 text = "Scene 2"
 metadata/_edit_use_anchors_ = true
 
-[node name="Entrance" parent="." instance=ExtResource("4_xpfk2")]
-position = Vector2(997, 590)
-Name = "enter Scene 1"
-Type = 2
-Description = "TestScene"
+[node name="GUI" parent="." instance=ExtResource("2_7h0rb")]
+metadata/_edit_use_anchors_ = true

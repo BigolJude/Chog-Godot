@@ -20,6 +20,7 @@ animations = [{
 
 [node name="Chog" type="CharacterBody2D"]
 position = Vector2(300, 300)
+scale = Vector2(0.5, 0.5)
 script = ExtResource("1_la234")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://b5i3ud3jxqpqf"]
+[gd_scene load_steps=10 format=3 uid="uid://b5i3ud3jxqpqf"]
 
+[ext_resource type="Script" path="res://Scenes/SceneBase.cs" id="1_ehqo8"]
 [ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/chog.tscn" id="1_if5e7"]
 [ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="2_ltp8n"]
 [ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="3_ead52"]
@@ -16,16 +17,21 @@ size = Vector2(50, 500)
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_sb1t5"]
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("1_ehqo8")
+SceneRight = "TestScene2"
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("SegmentShape2D_nu1yr")
 
-[node name="Chog" parent="." instance=ExtResource("1_if5e7")]
+[node name="Entrance" parent="." instance=ExtResource("5_xs662")]
+position = Vector2(84, 597)
+Name = "enter scene 2"
+Type = 2
+Description = "TestScene2"
 
-[node name="GUI" parent="." instance=ExtResource("3_ead52")]
-metadata/_edit_use_anchors_ = true
+[node name="Chog" parent="." instance=ExtResource("1_if5e7")]
 
 [node name="Tree" type="StaticBody2D" parent="."]
 position = Vector2(1100, 400)
@@ -45,6 +51,7 @@ Name = "penis"
 Description = "DialogTest"
 
 [node name="DialogInteraction" parent="." instance=ExtResource("2_ltp8n")]
+position = Vector2(600, 600)
 Name = "chat with me!"
 Type = 1
 Description = "DialogTest"
@@ -57,10 +64,7 @@ offset_bottom = 31.0
 text = "Scene 1"
 metadata/_edit_use_anchors_ = true
 
-[node name="Entrance" parent="." instance=ExtResource("5_xs662")]
-position = Vector2(932, 555)
-Name = "enter scene 2"
-Type = 2
-Description = "TestScene2"
+[node name="GUI" parent="." instance=ExtResource("3_ead52")]
+metadata/_edit_use_anchors_ = true
 
 [connection signal="OnInteractionEvent" from="GUI" to="Tree" method="OnEvent"]
