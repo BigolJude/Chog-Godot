@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://d3amlik2mbnk6"]
+[gd_scene load_steps=7 format=3 uid="uid://d3amlik2mbnk6"]
 
 [ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/chog.tscn" id="1_u2shf"]
+[ext_resource type="Script" path="res://Scenes/SceneBase.cs" id="1_wtmrn"]
 [ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="2_7h0rb"]
 [ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="3_d08ew"]
 [ext_resource type="PackedScene" uid="uid://bw3t277q0nyhr" path="res://Objects/Interactions/Entrance.tscn" id="4_xpfk2"]
@@ -10,6 +11,7 @@ a = Vector2(-3, 651)
 b = Vector2(1158, 646)
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("1_wtmrn")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 

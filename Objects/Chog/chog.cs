@@ -55,7 +55,7 @@ public partial class chog : CharacterBody2D
 		{
 			EmitSignal(SignalName.NavigateRight);
 		}
-		else if(Position.X > 0)
+		else if(Position.X < 0)
 		{
 			EmitSignal(SignalName.NavigateLeft);
 		}

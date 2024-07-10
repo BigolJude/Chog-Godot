@@ -24,13 +24,19 @@ public partial class SceneBase : Node2D
 
 	public void OnLeftNavigation()
 	{
-		PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + SceneLeft + SCENE_SUFFIX);
-		GetTree().ChangeSceneToPacked(scene);
+		if(!string.IsNullOrEmpty(SceneLeft))
+		{
+			PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + SceneLeft + SCENE_SUFFIX);
+			GetTree().ChangeSceneToPacked(scene);
+		}
 	}
 
 	public void OnRightNavigation()
 	{
-		PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + SceneRight + SCENE_SUFFIX);
-		GetTree().ChangeSceneToPacked(scene);
+		if(!string.IsNullOrEmpty(SceneRight))
+		{
+			PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + SceneRight + SCENE_SUFFIX);
+			GetTree().ChangeSceneToPacked(scene);
+		}
 	}
 }
