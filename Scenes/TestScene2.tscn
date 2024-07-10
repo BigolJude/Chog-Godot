@@ -12,6 +12,7 @@ b = Vector2(1158, 646)
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_wtmrn")
+SceneRight = "TestScene"
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
@@ -27,6 +28,7 @@ Description = "TestScene"
 [node name="Chog" parent="." instance=ExtResource("1_u2shf")]
 
 [node name="DialogInteraction" parent="." instance=ExtResource("3_d08ew")]
+position = Vector2(585, 602)
 Name = "chat with me!"
 Type = 1
 Description = "DialogTest2"
