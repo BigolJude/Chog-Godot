@@ -124,13 +124,10 @@ public partial class GUI : Control
 	private void ChangeControlNodeVisibility(string nodeName, bool visible)
 	{
 		Control node = GetNode<Control>(nodeName);
-		if (visible) {
+		if (visible)
 			node.Show();
-		}
 		else
-		{
 			node.Hide();
-		}
 	}
 	
 	private void OnItemListSelected(long index)
