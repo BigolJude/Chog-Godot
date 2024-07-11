@@ -1,7 +1,8 @@
 using Godot;
 using System;
+using System.Runtime.Serialization;
 
-public partial class chog : CharacterBody2D
+public partial class Chog : CharacterBody2D
 {
 	private const string WALK_LEFT = "walk_left";
 	private const string WALK_RIGHT = "walk_right";
@@ -9,6 +10,7 @@ public partial class chog : CharacterBody2D
 	private const string SPRINT_RIGHT = "sprint_right";
 	private const string GRAVITY_SETTING_LOCATION = "physics/2d/default_gravity";
 	private const string JUMP = "jump";
+	private const string ROOT_NODE = "/root/Node2D";
 	
 	public float Gravity = ProjectSettings.GetSetting(GRAVITY_SETTING_LOCATION).AsSingle();
 	
@@ -31,11 +33,13 @@ public partial class chog : CharacterBody2D
 	public delegate void NavigateRightEventHandler();
 	
 	public Vector2 ScreenSize;
+
+	public Inventory PlayerInventory = new Inventory();
 	
 	public override void _Ready()
 	{
 		ScreenSize = GetViewportRect().Size;
-		SceneBase scene = GetNode<SceneBase>("/root/Node2D");
+		SceneBase scene = GetNode<SceneBase>(ROOT_NODE);
 		Callable onLeftNavigation = Callable.From(() => scene.OnLeftNavigation());
 		Connect(SignalName.NavigateLeft, onLeftNavigation);
 
@@ -92,5 +96,10 @@ public partial class chog : CharacterBody2D
 		{
 			animatedSprite.FlipH = velocity.X < 0;
 		}
-	}	
+	}
+
+	public void AddPlayerInventory(Inventory inventory)
+	{
+		this.PlayerInventory = inventory;
+	}
 }

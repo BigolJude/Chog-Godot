@@ -40,7 +40,6 @@ public partial class GUI : Control
 		ChangeControlNodeVisibility(INTERACTION_LABEL, HIDE);
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 	}
@@ -265,7 +264,6 @@ public partial class GUI : Control
 		GetNode<Label>(CHATBOX_LABEL).Text = string.Empty;
 	}
 	
-	// Okay no longer for debug purposes but I need to look into the 
 	private string PrintArray(int [] array)
 	{
 		string [] stringArray = new string [array.Length];
