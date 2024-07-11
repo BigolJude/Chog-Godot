@@ -1,11 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://b5i3ud3jxqpqf"]
+[gd_scene load_steps=11 format=3 uid="uid://b5i3ud3jxqpqf"]
 
 [ext_resource type="Script" path="res://Scenes/SceneBase.cs" id="1_ehqo8"]
-[ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/chog.tscn" id="1_if5e7"]
+[ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/Chog.tscn" id="1_if5e7"]
 [ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="2_ltp8n"]
 [ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="3_ead52"]
 [ext_resource type="Script" path="res://Scenes/Logic/Event.cs" id="4_8k12s"]
 [ext_resource type="PackedScene" uid="uid://bw3t277q0nyhr" path="res://Objects/Interactions/Entrance.tscn" id="5_xs662"]
+[ext_resource type="PackedScene" uid="uid://ciep1l57gnm4a" path="res://Objects/Inventory/InventoryUI.tscn" id="7_kyxf1"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_nu1yr"]
 a = Vector2(-3, 651)
@@ -66,5 +67,9 @@ metadata/_edit_use_anchors_ = true
 
 [node name="GUI" parent="." instance=ExtResource("3_ead52")]
 metadata/_edit_use_anchors_ = true
+
+[node name="Inventory" parent="." instance=ExtResource("7_kyxf1")]
+offset_right = 1156.0
+offset_bottom = 654.0
 
 [connection signal="OnInteractionEvent" from="GUI" to="Tree" method="OnEvent"]

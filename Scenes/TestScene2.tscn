@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://d3amlik2mbnk6"]
+[gd_scene load_steps=8 format=3 uid="uid://d3amlik2mbnk6"]
 
-[ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/chog.tscn" id="1_u2shf"]
+[ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/Chog.tscn" id="1_u2shf"]
 [ext_resource type="Script" path="res://Scenes/SceneBase.cs" id="1_wtmrn"]
 [ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="2_7h0rb"]
 [ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="3_d08ew"]
 [ext_resource type="PackedScene" uid="uid://bw3t277q0nyhr" path="res://Objects/Interactions/Entrance.tscn" id="4_xpfk2"]
+[ext_resource type="PackedScene" uid="uid://ciep1l57gnm4a" path="res://Objects/Inventory/InventoryUI.tscn" id="6_eqsiq"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_nu1yr"]
 a = Vector2(-3, 651)
@@ -12,6 +13,7 @@ b = Vector2(1158, 646)
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_wtmrn")
+SceneRight = "TestScene"
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
@@ -27,6 +29,7 @@ Description = "TestScene"
 [node name="Chog" parent="." instance=ExtResource("1_u2shf")]
 
 [node name="DialogInteraction" parent="." instance=ExtResource("3_d08ew")]
+position = Vector2(585, 602)
 Name = "chat with me!"
 Type = 1
 Description = "DialogTest2"
@@ -41,3 +44,10 @@ metadata/_edit_use_anchors_ = true
 
 [node name="GUI" parent="." instance=ExtResource("2_7h0rb")]
 metadata/_edit_use_anchors_ = true
+
+[node name="Inventory" parent="." instance=ExtResource("6_eqsiq")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
