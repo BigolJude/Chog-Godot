@@ -2,6 +2,8 @@ using System;
 using Godot;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using System.ComponentModel;
 
 public class Inventory
 {
@@ -24,15 +26,24 @@ public class Inventory
 		XmlParser parser = GetItemXmlParser();
 		while(parser.Read() != Error.FileEof)
 		{
-			if(parser.GetNodeName() ==  XML_ELEMENT_ITEM && parser.GetAttributeValue(0).ToInt() == itemCode)
+			if(parser.GetNodeType() == XmlParser.NodeType.Element 
+			   && parser.GetNodeName() == XML_ELEMENT_ITEM 
+			   && parser.GetAttributeValue(0).ToInt() == itemCode)
 			{
-				Item item = new Item(parser.GetAttributeValue(0).ToInt(), parser.GetAttributeValue(1));
-				if(Items.ContainsKey(item))
-					Items[item] = Items[item] + 1;
+				if(Items.Any(x => x.Key.Id == parser.GetAttributeValue(0).ToInt()))
+				{
+					KeyValuePair<Item, int> item = Items.Single(x => x.Key.Id == parser.GetAttributeValue(0).ToInt());
+					Items[item.Key] = Items[item.Key] + 1;
+				}
 				else
-					Items.Add(item, 0);
+				{
+					Item inventoryItem = new Item(parser.GetAttributeValue(0).ToInt(), parser.GetAttributeValue(1));
+					Items.Add(inventoryItem , 1);
+					GD.Print("Creating value");
+				}
 			}
 		}
+		parser.Dispose();
 	}
 
 	public void RemoveItem(int itemCode)

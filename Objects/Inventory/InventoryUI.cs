@@ -18,7 +18,7 @@ public partial class InventoryUI : Control
 	{
 		if(Input.IsActionJustPressed(INVENTORY_ACTION))
 		{
-			foreach(Item item in playerInventory.Items)
+			foreach(Item item in playerInventory.Items.Keys)
 			{
 				
 			}
