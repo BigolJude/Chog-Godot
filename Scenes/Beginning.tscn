@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0mhn8lnx8dt8"]
+
+[ext_resource type="Script" path="res://Scenes/Logic/Beginning.cs" id="1_bdwwo"]
+[ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="2_1d8vt"]
+
+[node name="Beginning" type="Node2D"]
+script = ExtResource("1_bdwwo")
+
+[node name="GUI" parent="." instance=ExtResource("2_1d8vt")]

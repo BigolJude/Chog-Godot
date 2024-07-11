@@ -98,13 +98,10 @@ public partial class GUI : Control
 	private void DisplayDialogOptions()
 	{
 		ItemList chatList = GetNode<ItemList>(CHATBOX_ITEMLIST);
-		foreach(Dialog dialog in CurrentDialog)
+		foreach(Dialog dialog in CurrentDialog.Where(x => IsDialogNext(x)))
 		{	
 			// Weird fix but for some painful reason int[] that have the same contents won't evaluate as equal.
-			if(IsDialogNext(dialog))
-			{
-				chatList.AddItem(dialog.Text);
-			}
+			chatList.AddItem(dialog.Text);
 		}
 		if (DialogDepth.Length > 0)
 		{
@@ -140,10 +137,13 @@ public partial class GUI : Control
 			return;
 		}
 		
-		foreach(Dialog dialog in CurrentDialog)
+		foreach(Dialog dialog in CurrentDialog.Where(x => IsDialogNext(x)))
 		{
 			if(dialog.Text == chatList.GetItemText((int)index))
 			{
+				GD.Print(dialog.Text + " - " + dialog.Response);
+				GD.Print(PrintArray(DialogDepth));
+				GD.Print(PrintArray(dialog.Depth));
 				switch(dialog.Type) 
 				{
 					case (DialogType.Exit):
@@ -155,8 +155,15 @@ public partial class GUI : Control
 					{
 						DialogEvent dialogEvent = (DialogEvent)dialog;
 						ResetDialog();
-						EmitSignal(SignalName.OnInteractionEvent, dialogEvent.Event);
-						GD.Print("Dialog event triggerred: " + dialogEvent.Event);
+						EmitSignal(SignalName.OnInteractionEvent, dialogEvent.EventData);
+						GD.Print("Dialog event triggerred: " + dialogEvent.EventData);
+						return;
+					}
+					case (DialogType.Transition):
+					{
+						DialogEvent dialogEvent = (DialogEvent)dialog;
+						ChangeScene(dialogEvent.EventData);
+						ResetDialog();
 						return;
 					}
 				}
@@ -167,7 +174,6 @@ public partial class GUI : Control
 					DialogDepth = dialog.Depth;
 					ExpectedDialogText = dialog.Response;
 					GetNode<Timer>(DIALOG_SCROLL_DELAY_TIMER).Start();
-					GD.Print(ExpectedDialogText);
 					break;
 				}
 			}	
@@ -222,7 +228,7 @@ public partial class GUI : Control
 								GD.Print("Something went wrong while parsing DialogType");
 							}
 							
-							if (type == DialogType.Event)
+							if (type == DialogType.Event || type == DialogType.Transition)
 							{
 								string eventText = parser.GetAttributeValue(3);
 								dialogOptions.Add(new DialogEvent(array, text, response, type, eventText));
@@ -236,6 +242,7 @@ public partial class GUI : Control
 						{
 							dialogOptions.Add(new Dialog(array, text, response));
 						}
+						GD.Print(PrintArray(array));
 						break;
 					}
 				}
@@ -272,5 +279,11 @@ public partial class GUI : Control
 			stringArray[i] = array[i].ToString();
 		}
 		return("[" + String.Join(", ", stringArray) + "]");
+	}
+
+	private void ChangeScene(string sceneName)
+	{
+		PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + sceneName + SCENE_SUFFIX);
+		GetTree().ChangeSceneToPacked(scene);
 	}
 }
