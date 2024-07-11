@@ -44,8 +44,7 @@ public partial class Chog : CharacterBody2D
 
 		Callable onRightNavigation = Callable.From(() => scene.OnRightNavigation());
 		Connect(SignalName.NavigateRight, onRightNavigation);
-		
-	}	
+	}
 
 	public override void _Process(double delta)
 	{
@@ -63,6 +62,8 @@ public partial class Chog : CharacterBody2D
 		{
 			EmitSignal(SignalName.NavigateLeft);
 		}
+
+		GetNode<ChogData>("/root/ChogData").PlayerInventory.AddItem(1);
 	}
 	
 	private Vector2 GetVelocity(double delta)

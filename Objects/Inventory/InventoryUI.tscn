@@ -1,22 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ciep1l57gnm4a"]
 
-[sub_resource type="CSharpScript" id="CSharpScript_5737k"]
-script/source = "using Godot;
-using System;
-
-public partial class Inventory : Control
-{
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-}
-"
+[ext_resource type="Script" path="res://Objects/Inventory/InventoryUI.cs" id="1_7jprt"]
 
 [node name="Inventory" type="Control"]
 layout_mode = 3
@@ -25,7 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = SubResource("CSharpScript_5737k")
+script = ExtResource("1_7jprt")
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1
@@ -40,3 +24,4 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+columns = 10
