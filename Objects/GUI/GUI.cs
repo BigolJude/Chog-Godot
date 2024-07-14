@@ -15,8 +15,6 @@ public partial class GUI : Control
 	private const string CHATBOX_ITEMLIST = CHATBOX_CONTAINER + "/" + "ItemList";
 	private const string DIALOG_SCROLL_DELAY_TIMER = CHATBOX_CONTAINER + "/" + "DialogScrollDelay";
 	private const string CHATBOX_LABEL = CHATBOX_CONTAINER + "/" + "Label";
-	private const string XML_SUFFIX = ".xml";
-	private const string SCENE_SUFFIX = ".tscn";
 	private const bool HIDE = false;
 	private const bool SHOW = true;
 	
@@ -88,8 +86,13 @@ public partial class GUI : Control
 			}
 			case (InteractionType.Entrance):
 			{
-				PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + interactionDescription + SCENE_SUFFIX);
-				GetTree().ChangeSceneToPacked(scene);
+				SceneHelper.TransitionScene(this, interactionDescription);
+				break;
+			}
+			case (InteractionType.Item):
+			{
+				int itemCode = interactionDescription.ToInt();
+				GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerInventory.AddItem(itemCode);
 				break;
 			}
 		}
@@ -98,13 +101,10 @@ public partial class GUI : Control
 	private void DisplayDialogOptions()
 	{
 		ItemList chatList = GetNode<ItemList>(CHATBOX_ITEMLIST);
-		foreach(Dialog dialog in CurrentDialog)
+		foreach(Dialog dialog in CurrentDialog.Where(x => IsDialogNext(x)))
 		{	
 			// Weird fix but for some painful reason int[] that have the same contents won't evaluate as equal.
-			if(IsDialogNext(dialog))
-			{
-				chatList.AddItem(dialog.Text);
-			}
+			chatList.AddItem(dialog.Text);
 		}
 		if (DialogDepth.Length > 0)
 		{
@@ -140,7 +140,7 @@ public partial class GUI : Control
 			return;
 		}
 		
-		foreach(Dialog dialog in CurrentDialog)
+		foreach(Dialog dialog in CurrentDialog.Where(x => IsDialogNext(x)))
 		{
 			if(dialog.Text == chatList.GetItemText((int)index))
 			{
@@ -155,11 +155,19 @@ public partial class GUI : Control
 					{
 						DialogEvent dialogEvent = (DialogEvent)dialog;
 						ResetDialog();
-						EmitSignal(SignalName.OnInteractionEvent, dialogEvent.Event);
-						GD.Print("Dialog event triggerred: " + dialogEvent.Event);
+						EmitSignal(SignalName.OnInteractionEvent, dialogEvent.EventData);
+						return;
+					}
+					case (DialogType.Transition):
+					{
+						DialogEvent dialogEvent = (DialogEvent)dialog;
+						SceneHelper.TransitionScene(this, dialogEvent.EventData);
+						ResetDialog();
 						return;
 					}
 				}
+
+				// We need to break out of the loop here.
 				if(dialog.Type == DialogType.None)
 				{
 					GetNode<Label>(CHATBOX_LABEL).Text = string.Empty;
@@ -167,7 +175,6 @@ public partial class GUI : Control
 					DialogDepth = dialog.Depth;
 					ExpectedDialogText = dialog.Response;
 					GetNode<Timer>(DIALOG_SCROLL_DELAY_TIMER).Start();
-					GD.Print(ExpectedDialogText);
 					break;
 				}
 			}	
@@ -179,7 +186,7 @@ public partial class GUI : Control
 	private void ParseDialogXml(string interactionDescription)
 	{
 		XmlParser parser = new XmlParser();
-		parser.Open(DIALOG_FOLDER + interactionDescription + XML_SUFFIX);
+		parser.Open(DIALOG_FOLDER + interactionDescription + GlobalStrings.XmlSuffix);
 		
 		Stack dialogLocations = new Stack();
 		List<Dialog> dialogOptions = new List<Dialog>();
@@ -187,67 +194,68 @@ public partial class GUI : Control
 		
 		while(parser.Read() != Error.FileEof)
 		{
-			if(parser.GetNodeType() == XmlParser.NodeType.Element)
+			switch(parser.GetNodeType())
 			{
-				switch (parser.GetNodeName())
+				case (XmlParser.NodeType.Element):
 				{
-					case (XML_ELEMENT_DIALOG):
+					switch (parser.GetNodeName())
 					{
-						currentY = 0;
-						dialogLocations.Push(currentY);
-						break;
-					}
-					case (XML_ELEMENT_OPTION):
-					{
-						currentY++;
-						string text = parser.GetAttributeValue(0);
-						string response = parser.GetAttributeValue(1);
-						int [] array = new int [dialogLocations.Count];
-						int i = 0;
-						
-						dialogLocations.Pop();
-						dialogLocations.Push(currentY);
-						
-						foreach(var dialogLocation in dialogLocations)
+						case (XML_ELEMENT_DIALOG):
 						{
-							array[i] = (int)dialogLocation;
-							i++;
+							currentY = 0;
+							dialogLocations.Push(currentY);
+							break;
 						}
-						Array.Reverse(array);
-						if(parser.GetAttributeCount() >= 3)
+						case (XML_ELEMENT_OPTION):
 						{
-							DialogType type;
-							if (!Enum.TryParse<DialogType>(parser.GetAttributeValue(2), out type))
+							currentY++;
+							dialogLocations.Pop();
+							dialogLocations.Push(currentY);
+
+							int [] newDialogLocations = dialogLocations.ToArray().Select(x => (int)x).ToArray();
+							Array.Reverse(newDialogLocations);
+
+							string text = parser.GetAttributeValue(0);
+							string response = parser.GetAttributeValue(1);
+
+							if(parser.GetAttributeCount() >= 3)
 							{
-								GD.Print("Something went wrong while parsing DialogType");
-							}
-							
-							if (type == DialogType.Event)
-							{
-								string eventText = parser.GetAttributeValue(3);
-								dialogOptions.Add(new DialogEvent(array, text, response, type, eventText));
+								if (!Enum.TryParse<DialogType>(parser.GetAttributeValue(2), out DialogType type))
+								{
+									GD.Print("Something went wrong while parsing DialogType");
+								}
+
+								if (type == DialogType.Event || type == DialogType.Transition)
+								{
+									string eventText = parser.GetAttributeValue(3);
+									dialogOptions.Add(new DialogEvent(newDialogLocations, text, response, type, eventText));
+								}
+								else
+								{
+									dialogOptions.Add(new Dialog(newDialogLocations, text, response, type));
+								}
 							}
 							else
 							{
-								dialogOptions.Add(new Dialog(array, text, response, type));
+								dialogOptions.Add(new Dialog(newDialogLocations, text, response));
 							}
+							break;
 						}
-						else
-						{
-							dialogOptions.Add(new Dialog(array, text, response));
-						}
-						break;
 					}
+					break;
 				}
-			}
-			if(parser.GetNodeType() == XmlParser.NodeType.ElementEnd 
-			   && parser.GetNodeName() == XML_ELEMENT_DIALOG
-			   && dialogLocations.Count > 0)
-			{
-				dialogLocations.Pop();
-				if(dialogLocations.Count > 0)
+				case(XmlParser.NodeType.ElementEnd):
 				{
-					currentY = (int)dialogLocations.Peek();		
+					if(parser.GetNodeName() == XML_ELEMENT_DIALOG
+				   	   && dialogLocations.Count > 0)
+					{
+						dialogLocations.Pop();
+
+						// Checking again to make sure the stack isn't empty after pop.
+						if(dialogLocations.Count > 0)
+							currentY = (int)dialogLocations.Peek();		
+					}
+					break;
 				}
 			}
 		}
@@ -258,7 +266,7 @@ public partial class GUI : Control
 	{
 		ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
 		GetNode<ItemList>(CHATBOX_ITEMLIST).Clear();
-		DialogDepth = new int []{};
+		DialogDepth = Array.Empty<int>();
 		CurrentDialogText = string.Empty;
 		ExpectedDialogText = string.Empty;
 		GetNode<Label>(CHATBOX_LABEL).Text = string.Empty;
@@ -266,11 +274,7 @@ public partial class GUI : Control
 	
 	private string PrintArray(int [] array)
 	{
-		string [] stringArray = new string [array.Length];
-		for(int i = 0; i < array.Length; i++)
-		{
-			stringArray[i] = array[i].ToString();
-		}
+		string [] stringArray = array.Select(x => x.ToString()).ToArray();
 		return("[" + String.Join(", ", stringArray) + "]");
 	}
 }

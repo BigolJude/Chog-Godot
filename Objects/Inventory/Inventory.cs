@@ -23,23 +23,27 @@ public class Inventory
 
 	public void AddItem(int itemCode)
 	{
+		if (Items.Count >= 10)
+			return;
+
 		XmlParser parser = GetItemXmlParser();
-		while(parser.Read() != Error.FileEof)
+		while (parser.Read() != Error.FileEof)
 		{
-			if(parser.GetNodeType() == XmlParser.NodeType.Element 
-			   && parser.GetNodeName() == XML_ELEMENT_ITEM 
+			if (parser.GetNodeType() == XmlParser.NodeType.Element
+			   && parser.GetNodeName() == XML_ELEMENT_ITEM
 			   && parser.GetAttributeValue(0).ToInt() == itemCode)
 			{
-				if(Items.Any(x => x.Key.Id == parser.GetAttributeValue(0).ToInt()))
+				KeyValuePair<Item, int> item = Items.SingleOrDefault(x => x.Key.Id == parser.GetAttributeValue(0).ToInt());
+				if (item.Equals(default(KeyValuePair<Item,int>)))
 				{
-					KeyValuePair<Item, int> item = Items.Single(x => x.Key.Id == parser.GetAttributeValue(0).ToInt());
-					Items[item.Key] = Items[item.Key] + 1;
+					Item inventoryItem = new(parser.GetAttributeValue(0).ToInt(),
+											parser.GetAttributeValue(1),
+											SceneHelper.LoadTexture2D(parser.GetAttributeValue(2)));
+					Items.Add(inventoryItem, 1);
 				}
 				else
 				{
-					Item inventoryItem = new Item(parser.GetAttributeValue(0).ToInt(), parser.GetAttributeValue(1));
-					Items.Add(inventoryItem , 1);
-					GD.Print("Creating value");
+					Items[item.Key] = Items[item.Key] + 1;
 				}
 			}
 		}
@@ -49,7 +53,8 @@ public class Inventory
 	public void RemoveItem(int itemCode)
 	{
 		Item item = Items.Keys.Single(x => x.Id == itemCode);
-		if(Items[item] - 1 > 0)
+    
+		if (Items[item] - 1 > 0)
 			Items[item] = Items[item] - 1;
 		else
 			Items.Remove(item);
@@ -57,8 +62,8 @@ public class Inventory
 
 	private XmlParser GetItemXmlParser()
 	{
-		XmlParser parser = new XmlParser();
+		XmlParser parser = new();
 		parser.Open(ITEMS_LOCATION);
-		return parser; 
+		return parser;
 	}
 }

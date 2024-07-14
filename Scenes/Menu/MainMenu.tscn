@@ -15,7 +15,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_dakfk")
 script = ExtResource("1_b723q")
-GameStartScene = "TestScene"
+GameStartScene = "Beginning"
+
 
 [node name="Grid" type="GridContainer" parent="."]
 layout_mode = 1

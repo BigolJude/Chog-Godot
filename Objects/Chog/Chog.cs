@@ -1,6 +1,4 @@
 using Godot;
-using System;
-using System.Runtime.Serialization;
 
 public partial class Chog : CharacterBody2D
 {
@@ -10,9 +8,8 @@ public partial class Chog : CharacterBody2D
 	private const string SPRINT_RIGHT = "sprint_right";
 	private const string GRAVITY_SETTING_LOCATION = "physics/2d/default_gravity";
 	private const string JUMP = "jump";
-	private const string ROOT_NODE = "/root/Node2D";
-	private const string CHOG_DATA_NODE = "/root/ChogData";
-	
+	private const string ANIMATED_SPRITE = "AnimatedSprite2D";
+  
 	public float Gravity = ProjectSettings.GetSetting(GRAVITY_SETTING_LOCATION).AsSingle();
 	
 	[Export]
@@ -38,7 +35,8 @@ public partial class Chog : CharacterBody2D
 	public override void _Ready()
 	{
 		ScreenSize = GetViewportRect().Size;
-		SceneBase scene = GetNode<SceneBase>(ROOT_NODE);
+		SceneBase scene = GetNode<SceneBase>(GlobalStrings.RootNode);
+
 		Callable onLeftNavigation = Callable.From(() => scene.OnLeftNavigation());
 		Connect(SignalName.NavigateLeft, onLeftNavigation);
 
@@ -62,8 +60,6 @@ public partial class Chog : CharacterBody2D
 		{
 			EmitSignal(SignalName.NavigateLeft);
 		}
-
-		GetNode<ChogData>("/root/ChogData").PlayerInventory.AddItem(1);
 	}
 	
 	private Vector2 GetVelocity(double delta)
@@ -92,7 +88,8 @@ public partial class Chog : CharacterBody2D
 	
 	private void GetSpriteDirection(Vector2 velocity)
 	{		
-		AnimatedSprite2D animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		AnimatedSprite2D animatedSprite = GetNode<AnimatedSprite2D>(ANIMATED_SPRITE);
+
 		if(velocity.X != 0)
 		{
 			animatedSprite.FlipH = velocity.X < 0;
@@ -101,7 +98,7 @@ public partial class Chog : CharacterBody2D
 
 	public void AddPlayerInventory(Inventory inventory)
 	{
-		ChogData chogData = GetNode<ChogData>(CHOG_DATA_NODE);
+		ChogData chogData = GetNode<ChogData>(GlobalStrings.ChogDataLocation);
 		chogData.PlayerInventory = inventory;
 	}
 }

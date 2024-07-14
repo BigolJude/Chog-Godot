@@ -15,7 +15,7 @@
                                 <Dialog>
                                     <Option text="Right. What language?" response="Lithuanian. Would you like to play?">
                                         <Dialog>
-                                            <Option text="Sure" response="Okay. Go over to the tree and interact with it." type="Event" event="spawn_tree" />
+                                            <Option text="Sure" response="Okay. Go over to the tree and interact with it." type="Event" data="spawn_tree" />
                                             <Option text="No right now." response="Okay. No problem" type="Exit" />
                                         </Dialog>
                                     </Option>

@@ -27,18 +27,19 @@ public class Dialog
 // Dialog specifically for events eg. Moving things.
 public class DialogEvent : Dialog
 {
-	public string Event { get; }
+	public string EventData { get; }
 	
-	public DialogEvent(int [] mDepth, string mText, string mResponse, DialogType mType, string mEvent) : base(mDepth, mText, mResponse, mType)
+	public DialogEvent(int [] mDepth, string mText, string mResponse, DialogType mType, string mEventData) : base(mDepth, mText, mResponse, mType)
 	{
-		Event = mEvent;
+		EventData = mEventData;
 	}
 }
 
 // Used for events within dialog eg. Exiting or Triggering
 public enum DialogType
 {
-	None = 0,
-	Exit = 1,
-	Event = 2
+	None,
+	Exit,
+	Event,
+	Transition
 }

@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://ciep1l57gnm4a"]
+
+[gd_scene load_steps=3 format=3 uid="uid://ciep1l57gnm4a"]
 
 [ext_resource type="Script" path="res://Objects/Inventory/InventoryUI.cs" id="1_7jprt"]
+
+[sub_resource type="Theme" id="Theme_ra6cn"]
 
 [node name="Inventory" type="Control"]
 layout_mode = 3
@@ -9,7 +12,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_7jprt")
+
+theme = SubResource("Theme_ra6cn")
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1
