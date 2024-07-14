@@ -7,8 +7,6 @@ public partial class InventoryUI : Control
 {
 	private const string INVENTORY_ACTION = "inventory";
 	private const string GRID = "GridContainer";
-	private const string CONTENT_FOLDER = "res://Objects/Content/";
-	private const string CONTENT_FORMAT = ".png";
 	private const string ITEM_TEXT_FORMAT = "{0} ({1})";
 	private bool IsOpen = false;
 
@@ -27,7 +25,7 @@ public partial class InventoryUI : Control
 			if(!IsOpen)
 			{
 				Show();
-				Inventory inventory = GetNode<ChogData>("/root/ChogData").PlayerInventory;
+				Inventory inventory = GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerInventory;
 
 				foreach(KeyValuePair<Item, int> item in inventory.Items)
 				{
@@ -51,7 +49,7 @@ public partial class InventoryUI : Control
 	private Button GenerateInventoryButton(KeyValuePair<Item, int> inventoryItem)
 	{
 		return new Button(){
-			Icon = ResourceLoader.Load<Texture2D>(CONTENT_FOLDER + inventoryItem.Key.Name + CONTENT_FORMAT),
+			Icon = inventoryItem.Key.Icon,
 			Text = string.Format(ITEM_TEXT_FORMAT, inventoryItem.Key.Name, inventoryItem.Value),
 			IconAlignment = HorizontalAlignment.Center,
 			VerticalIconAlignment = VerticalAlignment.Top,

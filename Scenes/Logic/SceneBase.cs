@@ -3,9 +3,6 @@ using System;
 
 public partial class SceneBase : Node2D
 {
-	private const string SCENE_FOLDER = "res://Scenes/";
-	private const string SCENE_SUFFIX = ".tscn";
-
 	[Export]
 	public string SceneLeft { get; set; } = string.Empty;
 
@@ -26,8 +23,7 @@ public partial class SceneBase : Node2D
 	{
 		if(!string.IsNullOrEmpty(SceneLeft))
 		{
-			PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + SceneLeft + SCENE_SUFFIX);
-			GetTree().ChangeSceneToPacked(scene);
+			SceneHelper.TransitionScene(this, SceneLeft);
 		}
 	}
 
@@ -35,8 +31,7 @@ public partial class SceneBase : Node2D
 	{
 		if(!string.IsNullOrEmpty(SceneRight))
 		{
-			PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + SceneRight + SCENE_SUFFIX);
-			GetTree().ChangeSceneToPacked(scene);
+			SceneHelper.TransitionScene(this, SceneRight);
 		}
 	}
 }

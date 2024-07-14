@@ -3,6 +3,6 @@ using System;
 public static class GlobalStrings
 {
     public static string ChogDataLocation { get; } = "/root/ChogData";
-    public static string ScenesFolder { get; } = "res://Scenes/";
-    public static string SceneSuffix { get; } = ".tscn";
+    public static string XmlSuffix { get; } = ".xml";
+    public static string RootNode { get; } = "/root/Node2D";
 }

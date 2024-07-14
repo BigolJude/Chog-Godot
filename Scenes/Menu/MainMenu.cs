@@ -5,9 +5,6 @@ public partial class MainMenu : Control
 {
 	[Export]
 	public string GameStartScene { get; set; } = String.Empty;
-
-	private const string SCENE_FOLDER = "res://Scenes/";
-	private const string SCENE_SUFFIX = ".tscn";
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -21,8 +18,7 @@ public partial class MainMenu : Control
 	
 	private void OnNewGamePressed()
 	{
-		PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + GameStartScene + SCENE_SUFFIX);
-		GetTree().ChangeSceneToPacked(scene);
+		SceneHelper.TransitionScene(this, GameStartScene);
 	}
 	
 	private void OnLoadGamePressed()
