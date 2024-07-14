@@ -53,6 +53,7 @@ public class Inventory
 	public void RemoveItem(int itemCode)
 	{
 		Item item = Items.Keys.Single(x => x.Id == itemCode);
+    
 		if (Items[item] - 1 > 0)
 			Items[item] = Items[item] - 1;
 		else

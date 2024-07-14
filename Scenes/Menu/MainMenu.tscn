@@ -17,6 +17,7 @@ theme = SubResource("Theme_dakfk")
 script = ExtResource("1_b723q")
 GameStartScene = "Beginning"
 
+
 [node name="Grid" type="GridContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8

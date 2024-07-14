@@ -8,6 +8,7 @@ public partial class InventoryUI : Control
 	private const string INVENTORY_ACTION = "inventory";
 	private const string GRID = "GridContainer";
 	private const string ITEM_TEXT_FORMAT = "{0} ({1})";
+
 	private bool IsOpen = false;
 
 	// Called when the node enters the scene tree for the first time.
@@ -45,7 +46,7 @@ public partial class InventoryUI : Control
 			IsOpen = !IsOpen;
 		}
 	}
-
+  
 	private Button GenerateInventoryButton(KeyValuePair<Item, int> inventoryItem)
 	{
 		return new Button(){

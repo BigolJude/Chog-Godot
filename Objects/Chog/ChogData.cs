@@ -9,6 +9,7 @@ public partial class ChogData : Node
 	{
 	}
 
+
 	public override void _Process(double delta)
 	{
 	}

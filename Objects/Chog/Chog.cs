@@ -9,6 +9,7 @@ public partial class Chog : CharacterBody2D
 	private const string GRAVITY_SETTING_LOCATION = "physics/2d/default_gravity";
 	private const string JUMP = "jump";
 	private const string ANIMATED_SPRITE = "AnimatedSprite2D";
+  
 	public float Gravity = ProjectSettings.GetSetting(GRAVITY_SETTING_LOCATION).AsSingle();
 	
 	[Export]
@@ -88,6 +89,7 @@ public partial class Chog : CharacterBody2D
 	private void GetSpriteDirection(Vector2 velocity)
 	{		
 		AnimatedSprite2D animatedSprite = GetNode<AnimatedSprite2D>(ANIMATED_SPRITE);
+
 		if(velocity.X != 0)
 		{
 			animatedSprite.FlipH = velocity.X < 0;
