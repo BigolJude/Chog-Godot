@@ -92,6 +92,12 @@ public partial class GUI : Control
 				GetTree().ChangeSceneToPacked(scene);
 				break;
 			}
+			case (InteractionType.Item):
+			{
+				int itemCode = interactionDescription.ToInt();
+				GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerInventory.AddItem(itemCode);
+				break;
+			}
 		}
 	}
 	
@@ -281,6 +287,7 @@ public partial class GUI : Control
 		return("[" + String.Join(", ", stringArray) + "]");
 	}
 
+	// Better off as a static function in a static class. Used pretty much universally.
 	private void ChangeScene(string sceneName)
 	{
 		PackedScene scene = (PackedScene)ResourceLoader.Load(SCENE_FOLDER + sceneName + SCENE_SUFFIX);

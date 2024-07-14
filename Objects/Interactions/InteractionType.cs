@@ -5,5 +5,6 @@ public enum InteractionType
     None = 0,
     Dialog = 1,
     Entrance = 2,
-    Event = 4
+    Item = 4,
+    Event = 8
 }

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Threading;
 
 public partial class Interaction : Area2D
 {
@@ -33,10 +34,11 @@ public partial class Interaction : Area2D
 		Connect(SignalName.OnEnter, onEnter);
 		
 		Callable onLeave = Callable.From(() => gui.OnInteractionLeave());
-		Connect(SignalName.OnLeave, onLeave);
+		Connect(SignalName.OnLeave, onLeave)	;
 		
 		Callable onInteraction = Callable.From(() => gui.OnInteraction(Type, Description));
 		Connect(SignalName.OnInteraction, onInteraction);
+
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -45,6 +47,10 @@ public partial class Interaction : Area2D
 		if(Input.IsActionJustPressed(INTERACTION) && InRange)
 		{
 			EmitSignal(SignalName.OnInteraction);
+			if(Type == InteractionType.Item)
+			{
+				Hide();
+			}
 		}
 	}
 	

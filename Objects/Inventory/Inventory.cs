@@ -23,6 +23,11 @@ public class Inventory
 
 	public void AddItem(int itemCode)
 	{
+		if(Items.Count >= 10)
+		{
+			return;
+		}
+
 		XmlParser parser = GetItemXmlParser();
 		while(parser.Read() != Error.FileEof)
 		{
@@ -34,6 +39,7 @@ public class Inventory
 				{
 					KeyValuePair<Item, int> item = Items.Single(x => x.Key.Id == parser.GetAttributeValue(0).ToInt());
 					Items[item.Key] = Items[item.Key] + 1;
+					GD.Print("Adding value");
 				}
 				else
 				{

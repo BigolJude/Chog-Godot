@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d3amlik2mbnk6"]
+[gd_scene load_steps=9 format=3 uid="uid://d3amlik2mbnk6"]
 
 [ext_resource type="PackedScene" uid="uid://bkx0jnwmk1atl" path="res://Objects/Chog/Chog.tscn" id="1_u2shf"]
 [ext_resource type="Script" path="res://Scenes/Logic/SceneBase.cs" id="1_wtmrn"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="3_d08ew"]
 [ext_resource type="PackedScene" uid="uid://bw3t277q0nyhr" path="res://Objects/Interactions/Entrance.tscn" id="4_xpfk2"]
 [ext_resource type="PackedScene" uid="uid://ciep1l57gnm4a" path="res://Objects/Inventory/InventoryUI.tscn" id="6_eqsiq"]
+[ext_resource type="PackedScene" uid="uid://2j0bodf3k64s" path="res://Objects/Coffee.tscn" id="7_hpyog"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_nu1yr"]
 a = Vector2(-3, 651)
@@ -25,6 +26,9 @@ position = Vector2(997, 590)
 Name = "enter Scene 1"
 Type = 2
 Description = "TestScene"
+
+[node name="Box" parent="." instance=ExtResource("7_hpyog")]
+position = Vector2(105, 587)
 
 [node name="Chog" parent="." instance=ExtResource("1_u2shf")]
 

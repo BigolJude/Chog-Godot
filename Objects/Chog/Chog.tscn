@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bkx0jnwmk1atl"]
 
 [ext_resource type="Script" path="res://Objects/Chog/Chog.cs" id="1_la234"]
-[ext_resource type="Texture2D" uid="uid://ckkegfk5bf6au" path="res://Objects/Chog/hedgehog.png" id="2_0glv0"]
+[ext_resource type="Texture2D" uid="uid://ckkegfk5bf6au" path="res://Objects/Content/hedgehog.png" id="2_qsv4x"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o4db8"]
 radius = 116.76
@@ -11,7 +11,7 @@ height = 318.036
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_0glv0")
+"texture": ExtResource("2_qsv4x")
 }],
 "loop": true,
 "name": &"walk",

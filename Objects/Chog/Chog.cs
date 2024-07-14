@@ -11,7 +11,6 @@ public partial class Chog : CharacterBody2D
 	private const string GRAVITY_SETTING_LOCATION = "physics/2d/default_gravity";
 	private const string JUMP = "jump";
 	private const string ROOT_NODE = "/root/Node2D";
-	private const string CHOG_DATA_NODE = "/root/ChogData";
 	
 	public float Gravity = ProjectSettings.GetSetting(GRAVITY_SETTING_LOCATION).AsSingle();
 	
@@ -62,8 +61,6 @@ public partial class Chog : CharacterBody2D
 		{
 			EmitSignal(SignalName.NavigateLeft);
 		}
-
-		GetNode<ChogData>("/root/ChogData").PlayerInventory.AddItem(1);
 	}
 	
 	private Vector2 GetVelocity(double delta)
@@ -101,7 +98,7 @@ public partial class Chog : CharacterBody2D
 
 	public void AddPlayerInventory(Inventory inventory)
 	{
-		ChogData chogData = GetNode<ChogData>(CHOG_DATA_NODE);
+		ChogData chogData = GetNode<ChogData>(GlobalStrings.ChogDataLocation);
 		chogData.PlayerInventory = inventory;
 	}
 }
