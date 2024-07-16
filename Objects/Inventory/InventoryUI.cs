@@ -1,7 +1,5 @@
 using Godot;
-using System;
 using System.Collections.Generic;
-using System.Numerics;
 
 public partial class InventoryUI : Control
 {
@@ -11,13 +9,11 @@ public partial class InventoryUI : Control
 
 	private bool IsOpen = false;
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		Hide();
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 		GridContainer grid = GetNode<GridContainer>(GRID);
@@ -55,7 +51,7 @@ public partial class InventoryUI : Control
 			IconAlignment = HorizontalAlignment.Center,
 			VerticalIconAlignment = VerticalAlignment.Top,
 			ExpandIcon = true,
-			CustomMinimumSize = new Godot.Vector2(100, 100)
+			CustomMinimumSize = new Vector2(100, 100)
 		};
 	}
 }

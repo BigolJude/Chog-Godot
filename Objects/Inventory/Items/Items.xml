@@ -1,4 +1,5 @@
 <Items>
     <Item id="1", name="Box" icon="Box"/>
     <Item id="2", name="Coffee" icon="Coffee"/>
+    <Item id="3" name="Book" icon="Book_Red">
 </Items>

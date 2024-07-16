@@ -1,9 +1,6 @@
-using System;
 using Godot;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
-using System.ComponentModel;
 
 public class Inventory
 {
@@ -53,7 +50,7 @@ public class Inventory
 	public void RemoveItem(int itemCode)
 	{
 		Item item = Items.Keys.Single(x => x.Id == itemCode);
-    
+	
 		if (Items[item] - 1 > 0)
 			Items[item] = Items[item] - 1;
 		else

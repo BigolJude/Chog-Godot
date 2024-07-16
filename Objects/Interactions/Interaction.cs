@@ -39,6 +39,11 @@ public partial class Interaction : Area2D
 		Callable onInteraction = Callable.From(() => gui.OnInteraction(Type, Description));
 		Connect(SignalName.OnInteraction, onInteraction);
 
+		Callable onBodyEntered = new(this, MethodName.OnBodyEntered);
+		Connect(SignalName.BodyEntered, onBodyEntered);
+
+		Callable onBodyExited = new(this, MethodName.OnBodyExited);
+		Connect(SignalName.BodyExited, onBodyExited);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

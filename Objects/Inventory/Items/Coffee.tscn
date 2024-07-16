@@ -1,13 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://2j0bodf3k64s"]
+[gd_scene load_steps=5 format=3 uid="uid://ckhwfcaddyih6"]
 
-[ext_resource type="Script" path="res://Objects/Interactions/Interaction.cs" id="1_fvdj6"]
-[ext_resource type="Texture2D" uid="uid://0oqv31iivkc1" path="res://Objects/Content/Coffee.png" id="2_eiuyw"]
+[ext_resource type="Script" path="res://Objects/Interactions/Interaction.cs" id="1_w4mdd"]
+[ext_resource type="Texture2D" uid="uid://0oqv31iivkc1" path="res://Objects/Content/Coffee.png" id="2_l260r"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_epfg2"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_eiuyw")
+"texture": ExtResource("2_l260r")
 }],
 "loop": true,
 "name": &"default",
@@ -18,7 +18,7 @@ animations = [{
 size = Vector2(83, 79)
 
 [node name="Coffee" type="Area2D"]
-script = ExtResource("1_fvdj6")
+script = ExtResource("1_w4mdd")
 Name = "pick up coffee"
 Type = 4
 Description = "2"
@@ -29,6 +29,3 @@ sprite_frames = SubResource("SpriteFrames_epfg2")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(6.5, 1.5)
 shape = SubResource("RectangleShape2D_cw3cs")
-
-[connection signal="body_entered" from="." to="." method="OnBodyEntered"]
-[connection signal="body_exited" from="." to="." method="OnBodyExited"]
