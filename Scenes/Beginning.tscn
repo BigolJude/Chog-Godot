@@ -1,9 +1,82 @@
-[gd_scene load_steps=3 format=3 uid="uid://cwl2fdtbc1q42"]
+[gd_scene load_steps=13 format=3 uid="uid://cwl2fdtbc1q42"]
 
 [ext_resource type="Script" path="res://Scenes/Logic/Beginning.cs" id="1_bdwwo"]
+[ext_resource type="Texture2D" uid="uid://ba67sv0e7snuo" path="res://Objects/Content/TrainTemplate_Interior.png" id="2_0l3sg"]
 [ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="2_1d8vt"]
+[ext_resource type="PackedScene" uid="uid://bhg3qbqbwun7r" path="res://Objects/Chog/Chog.tscn" id="2_4hdr0"]
+[ext_resource type="Texture2D" uid="uid://cras4lpljp1n6" path="res://Objects/Content/TrainTemplate.png" id="3_5vnjj"]
+[ext_resource type="Texture2D" uid="uid://v8jtbmiahc40" path="res://Objects/Content/Station_Platform.png" id="6_4d6nx"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_j53i5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_0l3sg")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_q54ab"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_5vnjj")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ybxxc"]
+size = Vector2(524, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5dftg"]
+size = Vector2(10, 215)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_00jbr"]
+size = Vector2(10, 240)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ikh7q"]
+size = Vector2(526, 20)
 
 [node name="Beginning" type="Node2D"]
 script = ExtResource("1_bdwwo")
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="."]
+position = Vector2(614, 542)
+sprite_frames = SubResource("SpriteFrames_j53i5")
+
+[node name="Chog" parent="." instance=ExtResource("2_4hdr0")]
+position = Vector2(367, 458)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(614, 542)
+sprite_frames = SubResource("SpriteFrames_q54ab")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="AnimatedSprite2D"]
+position = Vector2(-58, 25)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite2D/StaticBody2D"]
+position = Vector2(-14, -11)
+shape = SubResource("RectangleShape2D_ybxxc")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="AnimatedSprite2D/StaticBody2D"]
+position = Vector2(245, -132.5)
+shape = SubResource("RectangleShape2D_5dftg")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="AnimatedSprite2D/StaticBody2D"]
+position = Vector2(-281, -149)
+shape = SubResource("RectangleShape2D_00jbr")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="AnimatedSprite2D/StaticBody2D"]
+position = Vector2(-13, -255)
+shape = SubResource("RectangleShape2D_ikh7q")
+
+[node name="StationPlatform" type="Sprite2D" parent="."]
+position = Vector2(511, 422)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("6_4d6nx")
 
 [node name="GUI" parent="." instance=ExtResource("2_1d8vt")]
