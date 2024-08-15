@@ -6,6 +6,7 @@ public static class SceneHelper
     private const string SCENE_SUFFIX = ".tscn";
 	private const string CONTENT_FOLDER = "res://Objects/Content/";
 	private const string CONTENT_FORMAT = ".png";
+    
     public static void TransitionScene(Node node, string sceneName)
     {
 		node.GetTree().ChangeSceneToPacked(

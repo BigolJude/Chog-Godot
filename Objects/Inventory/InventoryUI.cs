@@ -16,19 +16,18 @@ public partial class InventoryUI : Control
 
 	public override void _Process(double delta)
 	{
-		GridContainer grid = GetNode<GridContainer>(GRID);
 		if(Input.IsActionJustPressed(INVENTORY_ACTION))
 		{
+			GridContainer grid = GetNode<GridContainer>(GRID);
 			if(!IsOpen)
 			{
-				Show();
 				Inventory inventory = GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerInventory;
-
 				foreach(KeyValuePair<Item, int> item in inventory.Items)
 				{
 					Button button = GenerateInventoryButton(item);
 					grid.AddChild(button);
 				}
+				Show();
 			}
 			else
 			{
@@ -38,7 +37,6 @@ public partial class InventoryUI : Control
 					grid.RemoveChild(child);
 				}
 			}
-
 			IsOpen = !IsOpen;
 		}
 	}

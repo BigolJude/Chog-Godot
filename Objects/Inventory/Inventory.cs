@@ -20,6 +20,7 @@ public class Inventory
 
 	public void AddItem(int itemCode)
 	{
+		// Item count doesn't include stacks.
 		if (Items.Count >= 10)
 			return;
 
