@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+using System.Collections.Generic;
 public partial class Interaction : Area2D
 {
 	private const string INTERACTION = "interact";
@@ -15,6 +15,9 @@ public partial class Interaction : Area2D
 	
 	[Export]
 	public string Description { get; set; } = String.Empty;
+
+	[Export]
+	public bool Repeatable { get; set; } = false;
 		
 	[Signal]
 	public delegate void OnEnterEventHandler(string interactionName);
@@ -28,21 +31,29 @@ public partial class Interaction : Area2D
 	// Called when the node enters the scene tree for the first time.
  	public override void _Ready()
 	{
-		GUI gui = GetNode<GUI>(GUI_LOCATION);
-		Callable onEnter = Callable.From(() => gui.OnInteractionEnter(Name));
-		Connect(SignalName.OnEnter, onEnter);
+		List<string> Actions = GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerActions;
+		if(Repeatable || !Actions.Contains(this.Name))
+		{
+			GUI gui = GetNode<GUI>(GUI_LOCATION);
+			Callable onEnter = Callable.From(() => gui.OnInteractionEnter(Name));
+			Connect(SignalName.OnEnter, onEnter);
 		
-		Callable onLeave = Callable.From(() => gui.OnInteractionLeave());
-		Connect(SignalName.OnLeave, onLeave)	;
+			Callable onLeave = Callable.From(() => gui.OnInteractionLeave());
+			Connect(SignalName.OnLeave, onLeave)	;
 		
-		Callable onInteraction = Callable.From(() => gui.OnInteraction(Type, Description));
-		Connect(SignalName.OnInteraction, onInteraction);
+			Callable onInteraction = Callable.From(() => gui.OnInteraction(Type, Description));
+			Connect(SignalName.OnInteraction, onInteraction);
 
-		Callable onBodyEntered = new(this, MethodName.OnBodyEntered);
-		Connect(SignalName.BodyEntered, onBodyEntered);
+			Callable onBodyEntered = new(this, MethodName.OnBodyEntered);
+			Connect(SignalName.BodyEntered, onBodyEntered);
 
-		Callable onBodyExited = new(this, MethodName.OnBodyExited);
-		Connect(SignalName.BodyExited, onBodyExited);
+			Callable onBodyExited = new(this, MethodName.OnBodyExited);
+			Connect(SignalName.BodyExited, onBodyExited);
+		}
+		else
+		{
+			Hide();
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -50,6 +61,7 @@ public partial class Interaction : Area2D
 	{
 		if(Input.IsActionJustPressed(INTERACTION) && InRange)
 		{
+			GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerActions.Add(this.Name);
 			EmitSignal(SignalName.OnInteraction);
 			if(Type == InteractionType.Item)
 			{

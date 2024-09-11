@@ -26,6 +26,7 @@ position = Vector2(997, 590)
 Name = "enter Scene 1"
 Type = 2
 Description = "TestScene"
+Repeatable = true
 
 [node name="Chog" parent="." instance=ExtResource("1_u2shf")]
 

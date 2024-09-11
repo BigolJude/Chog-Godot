@@ -1,3 +1,13 @@
-[gd_scene format=3 uid="uid://bxlwbdvag1egf"]
+[gd_scene load_steps=3 format=3 uid="uid://bxlwbdvag1egf"]
+
+[ext_resource type="Texture2D" uid="uid://diew3mgyhe8ty" path="res://Objects/Content/CoffeeMachine.png" id="1_q8174"]
+[ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="2_djism"]
 
 [node name="Node2D" type="Node2D"]
+
+[node name="CoffeeMachine" type="Sprite2D" parent="."]
+position = Vector2(787, 517)
+texture = ExtResource("1_q8174")
+
+[node name="DialogInteraction" parent="CoffeeMachine" instance=ExtResource("2_djism")]
+position = Vector2(-5, 11)
