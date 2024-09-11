@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dl6ndn7v41bt"]
 
-[ext_resource type="Script" path="res://Scenes/Menu/MainMenu.cs" id="1_b723q"]
+[ext_resource type="Script" path="res://Scenes/MenuLogic/MainMenu.cs" id="1_5pwyl"]
 
 [sub_resource type="Theme" id="Theme_dakfk"]
 Label/colors/font_color = Color(1, 1, 1, 1)
@@ -14,7 +14,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_dakfk")
-script = ExtResource("1_b723q")
+script = ExtResource("1_5pwyl")
 GameStartScene = "Beginning"
 
 [node name="Grid" type="GridContainer" parent="."]

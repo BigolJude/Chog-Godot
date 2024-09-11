@@ -59,6 +59,7 @@ public partial class Chog : CharacterBody2D
 		else if(Position.X < 0)
 		{
 			EmitSignal(SignalName.NavigateLeft);
+		
 		}
 	}
 	
@@ -92,7 +93,7 @@ public partial class Chog : CharacterBody2D
 
 		if(velocity.X != 0)
 		{
-			animatedSprite.FlipH = velocity.X < 0;
+			animatedSprite.FlipH = velocity.X > 0;
 		}
 	}
 
