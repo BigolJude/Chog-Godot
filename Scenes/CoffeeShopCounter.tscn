@@ -1,13 +1,64 @@
-[gd_scene load_steps=3 format=3 uid="uid://bxlwbdvag1egf"]
+[gd_scene load_steps=8 format=3 uid="uid://bxlwbdvag1egf"]
 
+[ext_resource type="Texture2D" uid="uid://m8ao8ykqbtge" path="res://Objects/Content/CoffeeCounterTemp.png" id="1_q5idm"]
 [ext_resource type="Texture2D" uid="uid://diew3mgyhe8ty" path="res://Objects/Content/CoffeeMachine.png" id="1_q8174"]
 [ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="2_djism"]
+[ext_resource type="PackedScene" uid="uid://bhg3qbqbwun7r" path="res://Objects/Chog/Chog.tscn" id="3_ys3jl"]
+[ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="5_gigq1"]
+[ext_resource type="PackedScene" uid="uid://ciep1l57gnm4a" path="res://Objects/Inventory/InventoryUI.tscn" id="6_3kev6"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_bp84h"]
+a = Vector2(-3, 651)
+b = Vector2(1158, 646)
 
 [node name="Node2D" type="Node2D"]
 
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(782, 528)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-780, -527)
+shape = SubResource("SegmentShape2D_bp84h")
+
+[node name="CoffeeCounterTemp" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(-159, -74)
+scale = Vector2(1.6, 1.6)
+texture = ExtResource("1_q5idm")
+
 [node name="CoffeeMachine" type="Sprite2D" parent="."]
-position = Vector2(787, 517)
+position = Vector2(617, 505)
 texture = ExtResource("1_q8174")
 
 [node name="DialogInteraction" parent="CoffeeMachine" instance=ExtResource("2_djism")]
-position = Vector2(-5, 11)
+position = Vector2(-74, 96)
+Name = "Coffee Machine"
+Type = 1
+Description = "CoffeeMachine"
+Repeatable = true
+
+[node name="Chog" parent="." instance=ExtResource("3_ys3jl")]
+position = Vector2(240, 543)
+
+[node name="GUI" parent="." instance=ExtResource("5_gigq1")]
+
+[node name="Pickup_Milk" parent="." instance=ExtResource("2_djism")]
+position = Vector2(950, 605)
+Name = "grab milk."
+Type = 4
+Description = "4"
+Repeatable = true
+
+[node name="Pickup_Cup" parent="." instance=ExtResource("2_djism")]
+position = Vector2(754, 601)
+Name = "grab cup"
+Type = 4
+Description = "grab_cup"
+Repeatable = true
+
+[node name="Inventory" parent="." instance=ExtResource("6_3kev6")]
+offset_left = 609.0
+offset_top = 294.0
+offset_right = 609.0
+offset_bottom = 294.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
