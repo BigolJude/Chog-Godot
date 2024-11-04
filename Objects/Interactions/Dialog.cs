@@ -35,11 +35,12 @@ public class DialogEvent : Dialog
 	}
 }
 
-// Used for events within dialog eg. Exiting or Triggering
+// Used for events within dialog eg. Exiting or Triggering Events
 public enum DialogType
 {
 	None,
 	Exit,
 	Event,
-	Transition
+	Transition,
+	Challenge
 }

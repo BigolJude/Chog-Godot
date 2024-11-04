@@ -52,7 +52,7 @@ Repeatable = true
 position = Vector2(754, 601)
 Name = "grab cup"
 Type = 4
-Description = "grab_cup"
+Description = "5"
 Repeatable = true
 
 [node name="Inventory" parent="." instance=ExtResource("6_3kev6")]

@@ -14,7 +14,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 script = ExtResource("1_my2vy")
 
-[node name="InteractionHContainer" type="HSplitContainer" parent="."]
+[node name="Interaction_Container" type="HSplitContainer" parent="."]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -28,7 +28,7 @@ offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Label" type="Label" parent="InteractionHContainer"]
+[node name="InteractionNotif_Label" type="Label" parent="Interaction_Container"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
@@ -36,7 +36,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 text = "Press F to interact."
 
-[node name="ChatBoxVContainer" type="VSplitContainer" parent="."]
+[node name="ChatBox_Container" type="VSplitContainer" parent="."]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -50,18 +50,53 @@ offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Label" type="Label" parent="ChatBoxVContainer"]
+[node name="ChatBox_Label" type="Label" parent="ChatBox_Container"]
 layout_mode = 2
 theme_type_variation = &"TooltipLabel"
 theme_override_styles/normal = SubResource("StyleBoxFlat_apmgi")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ItemList" type="ItemList" parent="ChatBoxVContainer"]
+[node name="ChatBox_ItemList" type="ItemList" parent="ChatBox_Container"]
 layout_mode = 2
 
-[node name="DialogScrollDelay" type="Timer" parent="ChatBoxVContainer"]
+[node name="DialogScrollDelay" type="Timer" parent="ChatBox_Container"]
 wait_time = 0.05
 
-[connection signal="item_selected" from="ChatBoxVContainer/ItemList" to="." method="OnItemListSelected"]
-[connection signal="timeout" from="ChatBoxVContainer/DialogScrollDelay" to="." method="OnDialogScrollDelayTimeout"]
+[node name="Challenge_Container" type="VSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -99.0
+offset_right = 340.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Challenge_TextBox" type="LineEdit" parent="Challenge_Container"]
+layout_mode = 2
+alignment = 1
+
+[node name="Challenge_Options" type="HSplitContainer" parent="Challenge_Container"]
+custom_minimum_size = Vector2(660, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Challenge_Cancel" type="Button" parent="Challenge_Container/Challenge_Options"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Cancel"
+
+[node name="Challenge_Submit" type="Button" parent="Challenge_Container/Challenge_Options"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Accept"
+
+[connection signal="item_selected" from="ChatBox_Container/ChatBox_ItemList" to="." method="OnItemListSelected"]
+[connection signal="timeout" from="ChatBox_Container/DialogScrollDelay" to="." method="OnDialogScrollDelayTimeout"]

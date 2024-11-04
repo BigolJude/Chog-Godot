@@ -123,10 +123,7 @@ public partial class GUI : Control
 	private void ChangeControlNodeVisibility(string nodeName, bool visible)
 	{
 		Control node = GetNode<Control>(nodeName);
-		if (visible)
-			node.Show();
-		else
-			node.Hide();
+		node.Visible = visible;
 	}
 	
 	private void OnItemListSelected(long index)
@@ -154,8 +151,8 @@ public partial class GUI : Control
 					case (DialogType.Event):
 					{
 						DialogEvent dialogEvent = (DialogEvent)dialog;
-						ResetDialog();
 						EmitSignal(SignalName.OnInteractionEvent, dialogEvent.EventData);
+						ResetDialog();
 						return;
 					}
 					case (DialogType.Transition):
@@ -163,6 +160,11 @@ public partial class GUI : Control
 						DialogEvent dialogEvent = (DialogEvent)dialog;
 						SceneHelper.TransitionScene(this, dialogEvent.EventData);
 						ResetDialog();
+						return;
+					}
+					case (DialogType.Challenge):
+					{
+						
 						return;
 					}
 				}
@@ -261,7 +263,7 @@ public partial class GUI : Control
 		}
 		CurrentDialog = dialogOptions;
 	}
-	
+
 	private void ResetDialog()
 	{
 		ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
@@ -271,7 +273,7 @@ public partial class GUI : Control
 		ExpectedDialogText = string.Empty;
 		GetNode<Label>(CHATBOX_LABEL).Text = string.Empty;
 	}
-	
+
 	private string PrintArray(int [] array)
 	{
 		string [] stringArray = array.Select(x => x.ToString()).ToArray();

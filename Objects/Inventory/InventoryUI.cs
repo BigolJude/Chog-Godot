@@ -39,6 +39,13 @@ public partial class InventoryUI : Control
 			}
 			IsOpen = !IsOpen;
 		}
+
+		if(Input.IsAnythingPressed() 
+		   && !Input.IsActionPressed(INVENTORY_ACTION)
+		   && !Input.IsMouseButtonPressed(MouseButton.Left))
+		{
+			Hide();
+		}
 	}
   
 	private Button GenerateInventoryButton(KeyValuePair<Item, int> inventoryItem)
