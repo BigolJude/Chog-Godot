@@ -3,30 +3,41 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 public partial class GUI : Control
 {
-	private const string XML_ELEMENT_DIALOG = "Dialog";
-	private const string XML_ELEMENT_OPTION = "Option";
-	private const string SCENE_FOLDER = "res://Scenes/";
-	private const string DIALOG_FOLDER = SCENE_FOLDER + "Dialog/";
-	private const string INTERACTION_LABEL = "InteractionHContainer/Label";
-	private const string CHATBOX_CONTAINER = "ChatBoxVContainer";
-	private const string CHATBOX_ITEMLIST = CHATBOX_CONTAINER + "/" + "ItemList";
-	private const string DIALOG_SCROLL_DELAY_TIMER = CHATBOX_CONTAINER + "/" + "DialogScrollDelay";
-	private const string CHATBOX_LABEL = CHATBOX_CONTAINER + "/" + "Label";
+	private struct XMLElement {
+		internal const string DIALOG = "Dialog";
+		internal const string OPTION = "Option";
+		internal const string CHALLENGE = "Challenge";
+	}
+	private struct ChatBox {
+		private const string CHATBOX_PREFIX = "ChatBox_";
+		internal const string BACK_OPTION = "Back";
+		internal const string CONTAINER = CHATBOX_PREFIX + "Container";
+		internal struct Container {
+			internal const string ITEMLIST = CONTAINER + "/" + CHATBOX_PREFIX + "ItemList";
+			internal const string LABEL = CONTAINER + "/" + CHATBOX_PREFIX + "Label";
+			internal const string DIALOG_SCROLL_DELAY_TIMER = CONTAINER + "/" + "DialogScrollDelay";
+		}
+	}
+	private struct Interaction {
+		internal const string LABEL = "Interaction_Container/InteractionNotif_Label";
+		internal const string LABEL_TEXT = "Press F to {0}.";
+	}
+	private struct Challenge {
+		private const string CHALLENGE_PREFIX = "Challenge_";
+		internal const string CONTAINER = CHALLENGE_PREFIX + "Container";
+		private struct Container {
+			internal const string CANCEL = CONTAINER + "/" + CHALLENGE_PREFIX + "Cancel";
+			internal const string SUBMIT = CONTAINER + "/" + CHALLENGE_PREFIX + "Submit";
+		}
+	}
 	private const bool HIDE = false;
 	private const bool SHOW = true;
-	
-	// These options need to be in some strongly typed folder for language options.
-	private const string INTERACTION_LABEL_TEXT = "Press F to {0}.";
-	private const string BACK_OPTION = "Back";
-	
-	// Dialog things
-	private int [] DialogDepth = {};
-	private List<Dialog> CurrentDialog;
-	private string ExpectedDialogText = "";
-	private string CurrentDialogText = "";
+		
+	private DialogTree DialogTree = null;
 	
 	[Signal]
 	public delegate void OnInteractionEventEventHandler(string Event);
@@ -34,8 +45,9 @@ public partial class GUI : Control
 	public override void _Ready()
 	{
 		Show();
-		ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
-		ChangeControlNodeVisibility(INTERACTION_LABEL, HIDE);
+		ChangeControlNodeVisibility(ChatBox.CONTAINER, HIDE);
+		ChangeControlNodeVisibility(Interaction.LABEL, HIDE);
+		ChangeControlNodeVisibility(Challenge.CONTAINER, HIDE);
 	}
 
 	public override void _Process(double delta)
@@ -44,52 +56,51 @@ public partial class GUI : Control
 	
 	private void OnDialogScrollDelayTimeout()
 	{
-		if (CurrentDialogText.Length != ExpectedDialogText.Length)
+		if (DialogTree.DialogDisplayed())
 		{
-			CurrentDialogText += ExpectedDialogText[CurrentDialogText.Length];
-			Label chatBoxLabel = GetNode<Label>(CHATBOX_LABEL);
-			chatBoxLabel.Text = CurrentDialogText;
+			Label chatBoxLabel = GetNode<Label>(ChatBox.Container.LABEL);
+			DialogTree.ScrollDialogText();
+			chatBoxLabel.Text = DialogTree.CurrentDialogText;
 		}
 		else
 		{
-			CurrentDialogText = string.Empty;
-			ExpectedDialogText = string.Empty;
-			GetNode<Timer>(DIALOG_SCROLL_DELAY_TIMER).Stop();
+			DialogTree.ResetCurrentText();
+			GetNode<Timer>(ChatBox.Container.DIALOG_SCROLL_DELAY_TIMER).Stop();
 		}
 	}
 	
 	public void OnInteractionEnter(string interactionName)
 	{
-		Label label = GetNode<Label>(INTERACTION_LABEL);
-		label.Text = string.Format(INTERACTION_LABEL_TEXT, interactionName);
+		Label label = GetNode<Label>(Interaction.LABEL);
+		label.Text = string.Format(Interaction.LABEL_TEXT, interactionName);
 		label.Show();
 	}
 	
 	public void OnInteractionLeave()
 	{
-		ChangeControlNodeVisibility(INTERACTION_LABEL, HIDE);
-		ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
+		ChangeControlNodeVisibility(Interaction.LABEL, HIDE);
+		ChangeControlNodeVisibility(ChatBox.CONTAINER, HIDE);
 		ResetDialog();
 	}
 		
 	public void OnInteraction(InteractionType type, string interactionDescription)
 	{
-		ChangeControlNodeVisibility(INTERACTION_LABEL, HIDE);
+		ChangeControlNodeVisibility(Interaction.LABEL, HIDE);
 		switch (type)
 		{
-			case (InteractionType.Dialog):
+			case InteractionType.Dialog:
 			{
-				ChangeControlNodeVisibility(CHATBOX_CONTAINER, SHOW);
-				ParseDialogXml(interactionDescription);
+				ChangeControlNodeVisibility(ChatBox.CONTAINER, SHOW);
+				DialogTree = new DialogTree(interactionDescription);
 				DisplayDialogOptions();
 				break;
 			}
-			case (InteractionType.Entrance):
+			case InteractionType.Entrance:
 			{
 				SceneHelper.TransitionScene(this, interactionDescription);
 				break;
 			}
-			case (InteractionType.Item):
+			case InteractionType.Item:
 			{
 				int itemCode = interactionDescription.ToInt();
 				GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerInventory.AddItem(itemCode);
@@ -98,26 +109,17 @@ public partial class GUI : Control
 		}
 	}
 	
-	private void DisplayDialogOptions()
-	{
-		ItemList chatList = GetNode<ItemList>(CHATBOX_ITEMLIST);
-		foreach(Dialog dialog in CurrentDialog.Where(x => IsDialogNext(x)))
+	private void DisplayDialogOptions() {
+		ItemList chatList = GetNode<ItemList>(ChatBox.Container.ITEMLIST);
+		foreach(Dialog dialog in DialogTree.CurrentDialogOptions)
 		{	
 			// Weird fix but for some painful reason int[] that have the same contents won't evaluate as equal.
 			chatList.AddItem(dialog.Text);
 		}
-		if (DialogDepth.Length > 0)
+		if (DialogTree.Depth.Length > 0)
 		{
-			chatList.AddItem(BACK_OPTION);
+			chatList.AddItem(ChatBox.BACK_OPTION);
 		}
-	}
-	
-	private bool IsDialogNext(Dialog dialog)
-	{
-		return (PrintArray(dialog.Depth.Take(DialogDepth.Length).ToArray()) == PrintArray(DialogDepth)
-			   && dialog.Depth.Length == DialogDepth.Length + 1)
-			   || (DialogDepth.Length == 0
-			   && dialog.Depth.Length == 1);
 	}
 	
 	private void ChangeControlNodeVisibility(string nodeName, bool visible)
@@ -128,155 +130,69 @@ public partial class GUI : Control
 	
 	private void OnItemListSelected(long index)
 	{
-		ItemList chatList = GetNode<ItemList>(CHATBOX_ITEMLIST);
-		if(chatList.GetItemText((int)index) == BACK_OPTION)
+		ItemList chatList = GetNode<ItemList>(ChatBox.Container.ITEMLIST);
+		string ItemText = chatList.GetItemText((int)index);
+		if(ItemText == ChatBox.BACK_OPTION)
 		{
-			DialogDepth = DialogDepth.ToList().Take(DialogDepth.Length - 1).ToArray();
+			DialogTree.Backwards();
 			chatList.Clear();
 			DisplayDialogOptions();	
 			return;
 		}
 		
-		foreach(Dialog dialog in CurrentDialog.Where(x => IsDialogNext(x)))
+		Dialog Dialog = DialogTree.CurrentDialogOptions.Find(x => x.Text == ItemText);
+		switch(Dialog.Type) 
 		{
-			if(dialog.Text == chatList.GetItemText((int)index))
+			case DialogType.Exit:
 			{
-				switch(dialog.Type) 
-				{
-					case (DialogType.Exit):
-					{
-						ResetDialog();
-						return;
-					}
-					case (DialogType.Event):
-					{
-						DialogEvent dialogEvent = (DialogEvent)dialog;
-						EmitSignal(SignalName.OnInteractionEvent, dialogEvent.EventData);
-						ResetDialog();
-						return;
-					}
-					case (DialogType.Transition):
-					{
-						DialogEvent dialogEvent = (DialogEvent)dialog;
-						SceneHelper.TransitionScene(this, dialogEvent.EventData);
-						ResetDialog();
-						return;
-					}
-					case (DialogType.Challenge):
-					{
-						
-						return;
-					}
-				}
-
-				// We need to break out of the loop here.
-				if(dialog.Type == DialogType.None)
-				{
-					GetNode<Label>(CHATBOX_LABEL).Text = string.Empty;
-					CurrentDialogText = string.Empty;
-					DialogDepth = dialog.Depth;
-					ExpectedDialogText = dialog.Response;
-					GetNode<Timer>(DIALOG_SCROLL_DELAY_TIMER).Start();
-					break;
-				}
-			}	
-		}
-		chatList.Clear();
-		DisplayDialogOptions();
-	}
-	
-	private void ParseDialogXml(string interactionDescription)
-	{
-		XmlParser parser = new XmlParser();
-		parser.Open(DIALOG_FOLDER + interactionDescription + GlobalStrings.XmlSuffix);
-		
-		Stack dialogLocations = new Stack();
-		List<Dialog> dialogOptions = new List<Dialog>();
-		int currentY = 0;
-		
-		while(parser.Read() != Error.FileEof)
-		{
-			switch(parser.GetNodeType())
+				GD.Print("Exited");
+				ResetDialog();
+				return;
+			}
+			case DialogType.Event:
 			{
-				case (XmlParser.NodeType.Element):
-				{
-					switch (parser.GetNodeName())
-					{
-						case (XML_ELEMENT_DIALOG):
-						{
-							currentY = 0;
-							dialogLocations.Push(currentY);
-							break;
-						}
-						case (XML_ELEMENT_OPTION):
-						{
-							currentY++;
-							dialogLocations.Pop();
-							dialogLocations.Push(currentY);
-
-							int [] newDialogLocations = dialogLocations.ToArray().Select(x => (int)x).ToArray();
-							Array.Reverse(newDialogLocations);
-
-							string text = parser.GetAttributeValue(0);
-							string response = parser.GetAttributeValue(1);
-
-							if(parser.GetAttributeCount() >= 3)
-							{
-								if (!Enum.TryParse<DialogType>(parser.GetAttributeValue(2), out DialogType type))
-								{
-									GD.Print("Something went wrong while parsing DialogType");
-								}
-
-								if (type == DialogType.Event || type == DialogType.Transition)
-								{
-									string eventText = parser.GetAttributeValue(3);
-									dialogOptions.Add(new DialogEvent(newDialogLocations, text, response, type, eventText));
-								}
-								else
-								{
-									dialogOptions.Add(new Dialog(newDialogLocations, text, response, type));
-								}
-							}
-							else
-							{
-								dialogOptions.Add(new Dialog(newDialogLocations, text, response));
-							}
-							break;
-						}
-					}
-					break;
-				}
-				case(XmlParser.NodeType.ElementEnd):
-				{
-					if(parser.GetNodeName() == XML_ELEMENT_DIALOG
-				   	   && dialogLocations.Count > 0)
-					{
-						dialogLocations.Pop();
-
-						// Checking again to make sure the stack isn't empty after pop.
-						if(dialogLocations.Count > 0)
-							currentY = (int)dialogLocations.Peek();		
-					}
-					break;
-				}
+				GD.Print("Event");
+				DialogEvent dialogEvent = (DialogEvent)Dialog;
+				EmitSignal(SignalName.OnInteractionEvent, dialogEvent.EventData);
+				ResetDialog();
+				return;
+			}
+			case DialogType.Transition:
+			{
+				GD.Print("Transitions");
+				DialogEvent dialogEvent = (DialogEvent)Dialog;
+				SceneHelper.TransitionScene(this, dialogEvent.EventData);
+				ResetDialog();
+				return;
+			}
+			case DialogType.Challenge:
+			{
+				GD.Print("Challenge");
+				DialogEvent dialogEvent = (DialogEvent)Dialog;
+				ChangeControlNodeVisibility(Challenge.CONTAINER, SHOW);
+				GD.Print("Showing container");
+				EmitSignal(SignalName.OnInteractionEvent, dialogEvent.EventData);	
+				break;
+			}
+			case DialogType.None:
+			{
+				GetNode<Label>(ChatBox.Container.LABEL).Text = string.Empty;
+				GetNode<Timer>(ChatBox.Container.DIALOG_SCROLL_DELAY_TIMER).Start();
+				DialogTree.Forwards(Dialog);
+				break;
 			}
 		}
-		CurrentDialog = dialogOptions;
+	
+		chatList.Clear();
+		DisplayDialogOptions();
 	}
 
 	private void ResetDialog()
 	{
-		ChangeControlNodeVisibility(CHATBOX_CONTAINER, HIDE);
-		GetNode<ItemList>(CHATBOX_ITEMLIST).Clear();
-		DialogDepth = Array.Empty<int>();
-		CurrentDialogText = string.Empty;
-		ExpectedDialogText = string.Empty;
-		GetNode<Label>(CHATBOX_LABEL).Text = string.Empty;
+		ChangeControlNodeVisibility(ChatBox.CONTAINER, HIDE);
+		GetNode<ItemList>(ChatBox.Container.ITEMLIST).Clear();
+		GetNode<Label>(ChatBox.Container.LABEL).Text = string.Empty;
+		DialogTree.Reset();
 	}
 
-	private string PrintArray(int [] array)
-	{
-		string [] stringArray = array.Select(x => x.ToString()).ToArray();
-		return("[" + String.Join(", ", stringArray) + "]");
-	}
 }

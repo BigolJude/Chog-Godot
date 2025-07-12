@@ -1,15 +1,7 @@
-<Dialog>
-    <Option text="Begin." response="I was nervous when I first arrived.">
-        <Dialog>
-            <Option text="Continue." response="I didn't know the people. I didn't even know the language.">
-                <Dialog>
-                    <Option text="Continue." response="But somehow I knew I'd get by just fine.">
-                        <Dialog>
-                            <Option text="Continue." response="" type="Transition" data="TestScene" />
-                        </Dialog>
-                    </Option>
+<Dialog text="Begin." response="I was nervous when I first arrived.">
+        <Dialog text="Continue." response="I didn't know the people. I didn't even know the language.">
+                <Dialog text="Continue." response="But somehow I knew I'd get by just fine.">
+                        <Dialog text="Continue." response="" type="Transition" data="TestScene" />
                 </Dialog>
-            </Option>
         </Dialog>
-    </Option>
 </Dialog>

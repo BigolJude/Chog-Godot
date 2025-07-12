@@ -1,12 +1,6 @@
-<Dialog>
-    <Option text="So where are we?" response="We are in the second test scene of the game.">
-        <Dialog>
-            <Option text="Right. So what now?" response="Well nothing yet. This is just a test for scene switching.">
-                <Dialog>
-                    <Option text="Right I'll get going then." response="" type="Exit"></Option>
-                </Dialog>
-            </Option>
+<Dialog text="So where are we?" response="We are in the second test scene of the game.">
+        <Dialog text="Right. So what now?" response="Well nothing yet. This is just a test for scene switching.">
+            <Dialog text="Right I'll get going then." response="" type="Exit" />
         </Dialog>
-    </Option>
-    <Option text="Goodbye!" response="" type="Exit">
-</Dialog>
+    </Dialog>
+<Dialog text="Goodbye!" response="" type="Exit">
