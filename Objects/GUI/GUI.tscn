@@ -100,3 +100,5 @@ text = "Accept"
 
 [connection signal="item_selected" from="ChatBox_Container/ChatBox_ItemList" to="." method="OnItemListSelected"]
 [connection signal="timeout" from="ChatBox_Container/DialogScrollDelay" to="." method="OnDialogScrollDelayTimeout"]
+[connection signal="pressed" from="Challenge_Container/Challenge_Options/Challenge_Cancel" to="." method="ChallengeCancelPressed"]
+[connection signal="pressed" from="Challenge_Container/Challenge_Options/Challenge_Submit" to="." method="ChallengeSubmitPressed"]

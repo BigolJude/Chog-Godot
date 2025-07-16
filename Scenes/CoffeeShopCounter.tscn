@@ -39,8 +39,6 @@ Repeatable = true
 [node name="Chog" parent="." instance=ExtResource("3_ys3jl")]
 position = Vector2(240, 543)
 
-[node name="GUI" parent="." instance=ExtResource("5_gigq1")]
-
 [node name="Pickup_Milk" parent="." instance=ExtResource("2_djism")]
 position = Vector2(950, 605)
 Name = "grab milk."
@@ -54,6 +52,8 @@ Name = "grab cup"
 Type = 4
 Description = "5"
 Repeatable = true
+
+[node name="GUI" parent="." instance=ExtResource("5_gigq1")]
 
 [node name="Inventory" parent="." instance=ExtResource("6_3kev6")]
 offset_left = 609.0

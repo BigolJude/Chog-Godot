@@ -9,7 +9,8 @@ public partial class Chog : CharacterBody2D
 	private const string GRAVITY_SETTING_LOCATION = "physics/2d/default_gravity";
 	private const string JUMP = "jump";
 	private const string ANIMATED_SPRITE = "AnimatedSprite2D";
-  
+
+	public bool Frozen { get; set; } = false;  
 	public float Gravity = ProjectSettings.GetSetting(GRAVITY_SETTING_LOCATION).AsSingle();
 	
 	[Export]
@@ -68,20 +69,22 @@ public partial class Chog : CharacterBody2D
 		Vector2 velocity = Velocity;
 		velocity.Y += Gravity * (float)delta;
 		velocity.X = 0;
-		
-		if(Input.IsActionPressed(WALK_LEFT) || Input.IsActionPressed(SPRINT_LEFT))
+		if (!Frozen)
 		{
-			velocity.X = -Speed;	
-		}
-		
-		if(Input.IsActionPressed(WALK_RIGHT) || Input.IsActionPressed(SPRINT_RIGHT))
-		{
-			velocity.X = Speed;	
-		}
-		
-		if(Input.IsActionJustPressed(JUMP) && IsOnFloor())
-		{
-			velocity.Y = JumpSpeed;
+			if(Input.IsActionPressed(WALK_LEFT) || Input.IsActionPressed(SPRINT_LEFT))
+			{
+				velocity.X = -Speed;	
+			}
+
+			if(Input.IsActionPressed(WALK_RIGHT) || Input.IsActionPressed(SPRINT_RIGHT))
+			{
+				velocity.X = Speed;	
+			}
+
+			if(Input.IsActionJustPressed(JUMP) && IsOnFloor())
+			{
+				velocity.Y = JumpSpeed;
+			}		
 		}
 		
 		return velocity;

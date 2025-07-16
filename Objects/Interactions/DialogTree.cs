@@ -6,6 +6,7 @@ using System.Data;
 using System.Dynamic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Transactions;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -17,10 +18,9 @@ public class DialogTree {
 
     private struct Element {
 		internal const string DIALOG = "Dialog";
-		internal const string OPTION = "Option";
         internal const string ANSWER = "Answer";
+		internal const string CHALLENGE = "Challenge";
         internal struct Challenge {
-		    internal const string CHALLENGE = "Challenge";
             internal const string INCORRECT = "Incorrect";
             internal const string CORRECT = "Correct";
         }
@@ -34,6 +34,7 @@ public class DialogTree {
 	}
 
     public int [] Depth { get; private set; } = {};
+	public Dialog CurrentDialog { get; private set; }
 	private readonly List<Dialog> DialogOptions;
 	public List<Dialog> CurrentDialogOptions { get; private set; }
 	public string ExpectedDialogText { get; private set; } = "";
@@ -64,26 +65,22 @@ public class DialogTree {
 						{
 							case Element.DIALOG:
 							{
-								currentDialogIndex++;
-								GD.Print(currentDialogIndex);
+								currentDialogIndex = 0;
+
+								if (parser.IsEmpty() && dialogLocations.Count > 0)
+								{
+									currentDialogIndex = (int)dialogLocations.Peek();
+									currentDialogIndex++;
+									dialogLocations.Pop();	
+								}
+
 								dialogLocations.Push(currentDialogIndex);
 								int[] newDialogLocations = dialogLocations.ToArray()
 																		  .Select(x => (int)x)
 																		  .ToArray();
 								Array.Reverse(newDialogLocations);
 
-								StopDialogBranch(parser, ref dialogLocations, ref currentDialogIndex);
-								AddDialog(parser, dialogOptions, newDialogLocations);
-								break;
-							}
-							case Element.Challenge.CHALLENGE:
-							{
-								// Want to get the elements use for answers.
-
-								int[] newDialogLocations = dialogLocations.ToArray()
-	   																      .Select(x => (int)x)
-	   																      .ToArray();
-								Array.Reverse(newDialogLocations);
+								// IsEmpty() checks if the XML value is self-terminating.
 
 								AddDialog(parser, dialogOptions, newDialogLocations);
 								break;
@@ -93,7 +90,17 @@ public class DialogTree {
 					}
 				case XmlParser.NodeType.ElementEnd:
 				{
-					StopDialogBranch(parser, ref dialogLocations, ref currentDialogIndex);
+					if (dialogLocations.Count > 0)
+					{	
+						dialogLocations.Pop();
+
+						// Checking again to make sure the stack isn't empty after pop.
+						if (dialogLocations.Count > 0)
+						{
+							currentDialogIndex = (int)dialogLocations.Peek();
+							currentDialogIndex++;
+						}
+					}
 					break;
 				}
 			}
@@ -101,27 +108,12 @@ public class DialogTree {
 		return dialogOptions;
 	}
 
-	private void StopDialogBranch(XmlParser parser, ref Stack dialogLocations, ref int currentDialogIndex)
-	{
-		if (parser.IsEmpty() && dialogLocations.Count > 0)
-		{
-			GD.Print("Popping");
-			dialogLocations.Pop();
-			currentDialogIndex = 0;
-
-			// Checking again to make sure the stack isn't empty after pop.
-			if (dialogLocations.Count > 0)
-				currentDialogIndex = (int)dialogLocations.Peek();
-
-			GD.Print(currentDialogIndex);
-		}
-	}
-
 	private void AddDialog(XmlParser parser, List<Dialog> dialogOptions, int[] newDialogLocations)
 	{
-
 		string text = parser.GetAttributeValue(Element.DialogIndex.TEXT);
 		string response = parser.GetAttributeValue(Element.DialogIndex.RESPONSE);
+
+		GD.Print(text +" - " + PrintArray(newDialogLocations));
 
 		if (parser.GetAttributeCount() >= 3)
 		{
@@ -132,38 +124,10 @@ public class DialogTree {
 
 			GD.Print(type);
 
-			if (type == DialogType.Event || type == DialogType.Transition)
+			if (type == DialogType.Event || type == DialogType.Transition || type == DialogType.Challenge)
 			{
 				string EventData = parser.GetAttributeValue(Element.DialogIndex.DATA);
 				dialogOptions.Add(new DialogEvent(newDialogLocations, text, response, type, EventData));
-			}
-			else if (type == DialogType.Challenge)
-			{
-				GD.Print("......");
-				List<string> Answers = new();
-				while (parser.GetNodeType() != XmlParser.NodeType.ElementEnd)
-				{
-					if (parser.GetNodeName() == Element.ANSWER)
-					{
-						Answers.Add(parser.GetAttributeValue(0));
-					}
-					parser.Read();
-				}
-
-				Challenge Challenge = new(
-					newDialogLocations.ToArray().Select(x => (int)x).ToArray(),
-					string.Empty,
-					string.Empty,
-					DialogType.Challenge,
-					Answers);
-
-				parser.Read();
-				parser.Read();
-				GD.Print(parser.GetAttributeValue(0));
-				Challenge.CorrectResponse = parser.GetAttributeValue(0);
-				GD.Print(parser.GetAttributeValue(1));
-				Challenge.IncorrectResponse = parser.GetAttributeValue(1);
-				dialogOptions.Add(Challenge);
 			}
 			else
 			{
@@ -181,20 +145,23 @@ public class DialogTree {
 			   && dialog.Depth.Length == Depth.Length + 1)
 			   || (Depth.Length == 0
 			   && dialog.Depth.Length == 1);
-	
-    private string PrintArray(int [] array)
+
+    private string PrintArray(int[] array)
 	{
-		string [] stringArray = array.Select(x => x.ToString()).ToArray();
-		return"[" + String.Join(", ", stringArray) + "]";
+		string[] stringArray = array.Select(x => x.ToString()).ToArray();
+		return "[" + String.Join(", ", stringArray) + "]";
 	}
+
+	public void SetCurrentDialog(string selectedText)
+		=> CurrentDialog = CurrentDialogOptions.Find(x => x.Text == selectedText);
 
     public void GetNextDialogOptions()
 		=> CurrentDialogOptions = DialogOptions.Where(x => IsDialogNext(x)).ToList();
 
-    public void Reset() {
+	public void Reset() {
 		ResetCurrentText();
-        Depth = Array.Empty<int>();
-    }
+		Depth = Array.Empty<int>();
+	}
 
     public void ResetCurrentText() {
         CurrentDialogText = string.Empty;
@@ -204,6 +171,7 @@ public class DialogTree {
     public void Forwards(Dialog Dialog) {
         CurrentDialogText = string.Empty;
 		Depth = Dialog.Depth;
+		GD.Print(PrintArray(Depth));
         GetNextDialogOptions();
 		ExpectedDialogText = Dialog.Response;
     }

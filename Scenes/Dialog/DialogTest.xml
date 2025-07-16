@@ -6,17 +6,15 @@
                 <Dialog text="What game?" response="Chog! The developer wanted to make a language learning tool to help his progress.">
                     <Dialog text="What's the gameplay?" response="To answer and understand questions and puzzles in a different language.">
                         <Dialog text="Right. What language?" response="Lithuanian. Would you like to play?">
+                            <Dialog text="Could I have a challenge?" response="Sure! Koks mano vardas?">                        
+                                <Dialog text="Your name is the developer" response="Taip tikrai, ir ką tu žaidi?" type="Challenge" data="Tavo vardas Developer">
+                                    <Dialog text="I am playing Chog" response="Puikiai" type="Challenge" data="Aš žaidžiu Chogą">
+                                        <Dialog text="Continue" response="" />
+                                    </Dialog>
+                                </Dialog>                                                        
+                            </Dialog> 
                             <Dialog text="Sure" response="Okay. Go over to the tree and interact with it." type="Event" data="spawn_tree" />
                             <Dialog text="No right now." response="Okay. No problem" type="Exit" />
-                            <Dialog text="Could I have a challenge?" response="Sure! Koks mano vardas?">                        
-                                <Challenge>
-                                    <Answers>
-                                        <Answer text="Developer" />
-                                    </Answers>
-                                <Response right="Taip Tikrai" wrong="ne!" />
-                                </Challenge>
-                                <Dialog text="Continue" response="I love you" />                                        
-                            </Dialog>        
                         </Dialog>    
                     </Dialog> 
                 </Dialog>
@@ -25,4 +23,3 @@
     </Dialog>
 </Dialog>
 <Dialog text="Goodbye!" response="See you soon!" type="Exit" />
- 

@@ -38,19 +38,6 @@ public class DialogEvent : Dialog
 	}
 }
 
-public class Challenge : Dialog {
-	private List<string> Answer;
-	public string CorrectResponse { get; set; }
-	public string IncorrectResponse { get; set; }
-
-	public Challenge(int [] mDepth, string mText, string mResponse, DialogType mType, List<string> mAnswer) : base(mDepth, mText, mResponse, mType)
-	{
-		Answer = mAnswer;
-	}
-
-	public bool IsCorrect(string Guess) => Answer.Contains(Guess.ToLower());
-}
-
 // Used for events within dialog eg. Exiting or Triggering Events
 public enum DialogType
 {
