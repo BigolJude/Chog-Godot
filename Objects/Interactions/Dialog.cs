@@ -4,7 +4,6 @@ using System.Diagnostics.Tracing;
 
 public class Dialog
 {
-
 	public int [] Depth { get; }
 	public string Text { get; }
 	public string Response { get; }

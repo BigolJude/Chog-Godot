@@ -97,23 +97,23 @@ public partial class GUI : Control
 		switch (type)
 		{
 			case InteractionType.Dialog:
-				{
-					ChangeControlNodeVisibility(ChatBox.CONTAINER, SHOW);
-					DialogTree = new DialogTree(interactionDescription);
-					DisplayDialogOptions();
-					break;
-				}
+			{
+				ChangeControlNodeVisibility(ChatBox.CONTAINER, SHOW);
+				DialogTree = new DialogTree(interactionDescription);
+				DisplayDialogOptions();
+				break;
+			}
 			case InteractionType.Entrance:
-				{
-					SceneHelper.TransitionScene(this, interactionDescription);
-					break;
-				}
+			{
+				SceneHelper.TransitionScene(this, interactionDescription);
+				break;
+			}
 			case InteractionType.Item:
-				{
-					int itemCode = interactionDescription.ToInt();
-					GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerInventory.AddItem(itemCode);
-					break;
-				}
+			{
+				int itemCode = interactionDescription.ToInt();
+				GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerInventory.AddItem(itemCode);
+				break;
+			}
 		}
 	}
 
@@ -123,9 +123,11 @@ public partial class GUI : Control
 		ItemList chatList = GetNode<ItemList>(ChatBox.Container.ITEMLIST);
 		foreach (Dialog dialog in DialogTree.CurrentDialogOptions)
 		{
+			GD.Print(dialog.Text);
 			// Weird fix but for some painful reason int[] that have the same contents won't evaluate as equal.
 			chatList.AddItem(dialog.Text);
 		}
+
 		if (DialogTree.Depth.Length > 0)
 		{
 			chatList.AddItem(ChatBox.BACK_OPTION);
@@ -156,43 +158,45 @@ public partial class GUI : Control
 		switch (dialog.Type)
 		{
 			case DialogType.Exit:
-				{
-					GD.Print("Exited");
-					ResetDialog();
-					GetNode<Chog>(CHOG).Frozen = false;
-					return;
-				}
+			{
+				GD.Print("Exited");
+				ResetDialog();
+				GetNode<Chog>(CHOG).Frozen = false;
+				return;
+			}
 			case DialogType.Event:
-				{
-					GD.Print("Event");
-					DialogEvent dialogEvent = (DialogEvent)dialog;
-					EmitSignal(SignalName.OnInteractionEvent, dialogEvent.EventData);
-					ResetDialog();
-					return;
-				}
+			{
+				GD.Print("Event");
+				DialogEvent dialogEvent = (DialogEvent)dialog;
+				EmitSignal(SignalName.OnInteractionEvent, dialogEvent.EventData);
+				GetNode<Chog>(CHOG).Frozen = false;
+				ResetDialog();
+				return;
+			}
 			case DialogType.Transition:
-				{
-					GD.Print("Transitions");
-					DialogEvent dialogEvent = (DialogEvent)dialog;
-					SceneHelper.TransitionScene(this, dialogEvent.EventData);
-					ResetDialog();
-					return;
-				}
+			{
+				GD.Print("Transitions");
+				DialogEvent dialogEvent = (DialogEvent)dialog;
+				SceneHelper.TransitionScene(this, dialogEvent.EventData);
+				GetNode<Chog>(CHOG).Frozen = false;
+				ResetDialog();
+				return;
+			}
 			case DialogType.Challenge:
-				{
-					GD.Print("Challenge");
-					ChangeControlNodeVisibility(Challenge.CONTAINER, SHOW);
-					ChangeControlNodeVisibility(ChatBox.CONTAINER, HIDE);
-					GD.Print("Showing container");
-					break;
-				}
+			{
+				GD.Print("Challenge");
+				ChangeControlNodeVisibility(Challenge.CONTAINER, SHOW);
+				ChangeControlNodeVisibility(ChatBox.CONTAINER, HIDE);
+				GD.Print("Showing container");
+				break;
+			}
 			case DialogType.None:
-				{
-					GetNode<Label>(ChatBox.Container.LABEL).Text = string.Empty;
-					GetNode<Timer>(ChatBox.Container.DIALOG_SCROLL_DELAY_TIMER).Start();
-					DialogTree.Forwards(dialog);
-					break;
-				}
+			{
+				GetNode<Label>(ChatBox.Container.LABEL).Text = string.Empty;
+				GetNode<Timer>(ChatBox.Container.DIALOG_SCROLL_DELAY_TIMER).Start();
+				DialogTree.Forwards(dialog);
+				break;
+			}
 		}
 
 		chatList.Clear();
@@ -204,7 +208,7 @@ public partial class GUI : Control
 		ChangeControlNodeVisibility(ChatBox.CONTAINER, HIDE);
 		GetNode<ItemList>(ChatBox.Container.ITEMLIST).Clear();
 		GetNode<Label>(ChatBox.Container.LABEL).Text = string.Empty;
-		if (DialogTree is null)
+		if (DialogTree is not null)
 			DialogTree.Reset();
 	}
 
@@ -212,7 +216,8 @@ public partial class GUI : Control
 	{
 		DialogEvent ChallengeDialog = (DialogEvent)DialogTree.CurrentDialog;
 
-		if (GetNode<LineEdit>(Challenge.Container.LINE_EDIT).Text.Contains(ChallengeDialog.EventData, StringComparison.OrdinalIgnoreCase)) {
+		if (GetNode<LineEdit>(Challenge.Container.LINE_EDIT).Text.Contains(ChallengeDialog.EventData, StringComparison.OrdinalIgnoreCase))
+		{
 			GetNode<Label>(ChatBox.Container.LABEL).Text = string.Empty;
 			GetNode<Timer>(ChatBox.Container.DIALOG_SCROLL_DELAY_TIMER).Start();
 			DialogTree.Forwards(ChallengeDialog);
@@ -220,6 +225,8 @@ public partial class GUI : Control
 		else
 			DialogTree.Backwards();
 
+		GetNode<ItemList>(ChatBox.Container.ITEMLIST).Clear();
+		DisplayDialogOptions();
 		ChangeControlNodeVisibility(ChatBox.CONTAINER, SHOW);
 		ChangeControlNodeVisibility(Challenge.CONTAINER, HIDE);
 	}

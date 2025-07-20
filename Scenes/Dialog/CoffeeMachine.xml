@@ -1,3 +1,5 @@
-<Dialog text="Make latte." response="You have made a latte" type="Event" data="get_drink_latte" />
-<Dialog text="Make espresso." response="You have made an espresso" type="Event" data="get_drink_espresso" />
-<Dialog text="Make tea." response="You have made tea" type="Event" data="get_drink_tea" />
+<DialogTree>
+    <Dialog text="Make latte." response="You have made a latte" type="Event" data="get_drink_latte" />
+    <Dialog text="Make espresso." response="You have made an espresso" type="Event" data="get_drink_espresso" />
+    <Dialog text="Make tea." response="You have made tea" type="Event" data="get_drink_tea" />
+</DialogTree>

@@ -20,10 +20,12 @@ public class DialogTree {
 		internal const string DIALOG = "Dialog";
         internal const string ANSWER = "Answer";
 		internal const string CHALLENGE = "Challenge";
-        internal struct Challenge {
-            internal const string INCORRECT = "Incorrect";
-            internal const string CORRECT = "Correct";
-        }
+		internal const int EVENT_ATTRIBUTE_COUNT = 3;
+        internal struct Challenge
+		{
+			internal const string INCORRECT = "Incorrect";
+			internal const string CORRECT = "Correct";
+		}
 		internal struct DialogIndex
 		{
 			internal const int TEXT = 0;
@@ -60,34 +62,30 @@ public class DialogTree {
 			switch (parser.GetNodeType())
 			{
 				case XmlParser.NodeType.Element:
-					{
-						switch (parser.GetNodeName())
-						{
-							case Element.DIALOG:
-							{
-								currentDialogIndex = 0;
-
-								if (parser.IsEmpty() && dialogLocations.Count > 0)
-								{
-									currentDialogIndex = (int)dialogLocations.Peek();
-									currentDialogIndex++;
-									dialogLocations.Pop();	
-								}
-
-								dialogLocations.Push(currentDialogIndex);
-								int[] newDialogLocations = dialogLocations.ToArray()
-																		  .Select(x => (int)x)
-																		  .ToArray();
-								Array.Reverse(newDialogLocations);
-
-								// IsEmpty() checks if the XML value is self-terminating.
-
-								AddDialog(parser, dialogOptions, newDialogLocations);
-								break;
-							}
-						}
+				{
+					if (!parser.GetNodeName().Equals(Element.DIALOG))
 						break;
+
+					currentDialogIndex = 0;
+
+					// IsEmpty() checks if the XML value is self-terminating.
+					if (parser.IsEmpty() && dialogLocations.Count > 0)
+					{
+						currentDialogIndex = (int)dialogLocations.Peek();
+						currentDialogIndex++;
+						dialogLocations.Pop();	
 					}
+
+					dialogLocations.Push(currentDialogIndex);
+					int[] newDialogLocations = dialogLocations.ToArray()
+															  .Select(x => (int)x)
+															  .ToArray();
+					Array.Reverse(newDialogLocations);
+
+
+					AddDialog(parser, dialogOptions, newDialogLocations);
+					break;
+				}
 				case XmlParser.NodeType.ElementEnd:
 				{
 					if (dialogLocations.Count > 0)
@@ -115,29 +113,20 @@ public class DialogTree {
 
 		GD.Print(text +" - " + PrintArray(newDialogLocations));
 
-		if (parser.GetAttributeCount() >= 3)
+		if (parser.GetAttributeCount() >= Element.EVENT_ATTRIBUTE_COUNT)
 		{
 			if (!Enum.TryParse<DialogType>(parser.GetAttributeValue(Element.DialogIndex.TYPE), ignoreCase: true, out DialogType type))
-			{
 				GD.Print("Something went wrong while parsing DialogType");
-			}
 
 			GD.Print(type);
 
 			if (type == DialogType.Event || type == DialogType.Transition || type == DialogType.Challenge)
-			{
-				string EventData = parser.GetAttributeValue(Element.DialogIndex.DATA);
-				dialogOptions.Add(new DialogEvent(newDialogLocations, text, response, type, EventData));
-			}
+				dialogOptions.Add(new DialogEvent(newDialogLocations, text, response, type, parser.GetAttributeValue(Element.DialogIndex.DATA)));
 			else
-			{
 				dialogOptions.Add(new Dialog(newDialogLocations, text, response, type));
-			}
 		}
 		else
-		{
 			dialogOptions.Add(new Dialog(newDialogLocations, text, response));
-		}
 	}
 
     private bool IsDialogNext(Dialog dialog)
