@@ -208,8 +208,7 @@ public partial class GUI : Control
 		ChangeControlNodeVisibility(ChatBox.CONTAINER, HIDE);
 		GetNode<ItemList>(ChatBox.Container.ITEMLIST).Clear();
 		GetNode<Label>(ChatBox.Container.LABEL).Text = string.Empty;
-		if (DialogTree is not null)
-			DialogTree.Reset();
+		DialogTree?.Reset();
 	}
 
 	private void ChallengeSubmitPressed()
@@ -227,13 +226,18 @@ public partial class GUI : Control
 
 		GetNode<ItemList>(ChatBox.Container.ITEMLIST).Clear();
 		DisplayDialogOptions();
-		ChangeControlNodeVisibility(ChatBox.CONTAINER, SHOW);
-		ChangeControlNodeVisibility(Challenge.CONTAINER, HIDE);
+		ChallengeReset();
 	}
 
 	private void ChallengeCancelPressed()
 	{
 		DialogTree.Backwards();
+		ChallengeReset();
+	}
+
+	private void ChallengeReset()
+	{
+		GetNode<LineEdit>(Challenge.Container.LINE_EDIT).Text = string.Empty;
 		ChangeControlNodeVisibility(ChatBox.CONTAINER, SHOW);
 		ChangeControlNodeVisibility(Challenge.CONTAINER, HIDE);
 	}
