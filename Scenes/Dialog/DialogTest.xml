@@ -1,21 +1,41 @@
 <DialogTree>
-    <Dialog text="What's your name?" response="I am the developer">
-        <Dialog text="How old are you?" response="24 at the time of development" >    
-            <Dialog text="What's going on?" response="You are in a test scene of a game">   
-                <Dialog text="How did I get here?" response="I put you here!" />
-                <Dialog text="What am I doing here?" response="Waiting till the game is made.">
-                    <Dialog text="What game?" response="Chog! The developer wanted to make a language learning tool to help his progress.">
-                        <Dialog text="What's the gameplay?" response="To answer and understand questions and puzzles in a different language.">
-                            <Dialog text="Right. What language?" response="Lithuanian. Would you like to play?">
-                                <Dialog text="Could I have a challenge?" response="Sure! Koks mano vardas?">                        
-                                    <Dialog text="Your name is the developer" response="Taip tikrai, ir ką tu žaidi?" type="Challenge" data="Tavo vardas Developer">
-                                        <Dialog text="I am playing Chog" response="Puikiai" type="Challenge" data="Aš žaidžiu Chogą">
-                                            <Dialog text="Continue" response=""></Dialog>
+    <Dialog text="What's your name?" 
+            response="I am the developer">
+        <Dialog text="How old are you?" 
+                response="24 at the time of development" >    
+            <Dialog text="What's going on?" 
+                    response="You are in a test scene of a game">   
+                <Dialog text="How did I get here?" 
+                        response="I put you here!" />
+                <Dialog text="What am I doing here?" 
+                        response="Waiting till the game is made.">
+                    <Dialog text="What game?" 
+                            response="Chog! The developer wanted to make a language learning tool to help his progress.">
+                        <Dialog text="What's the gameplay?" 
+                                response="To answer and understand questions and puzzles in a different language.">
+                            <Dialog text="Right. What language?" 
+                                    response="Lithuanian. Would you like to play?">
+                                <Dialog text="Could I have a challenge?" 
+                                        response="Sure! Koks mano vardas?">                        
+                                    <Dialog text="Your name is the developer" 
+                                            response="Taip tikrai, ir ką tu žaidi?" 
+                                            type="Challenge" 
+                                            data="Tavo vardas Developer">
+                                        <Dialog text="I am playing Chog" 
+                                                response="Puikiai" 
+                                                type="Challenge" 
+                                                data="Aš žaidžiu Chogą">
+                                            <Dialog text="Continue"
+                                                    response="">
+                                            </Dialog>
                                         </Dialog>
                                     </Dialog>                                                        
                                 </Dialog> 
-                                <Dialog text="Sure" response="Okay. Go over to the tree and interact with it." type="Event" data="spawn_tree" />
-                                <Dialog text="No right now." response="Okay. No problem" type="Exit" />
+                                <Dialog text="Sure" 
+                                        response="Okay. Go over to the tree and interact with it." type="Event" data="spawn_tree" />
+                                <Dialog text="No right now." 
+                                        response="Okay. No problem" 
+                                        type="Exit" />
                             </Dialog>    
                         </Dialog> 
                     </Dialog>

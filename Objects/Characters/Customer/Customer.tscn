@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvp6vv2j78ldi"]
+
+[ext_resource type="Texture2D" uid="uid://b8al4g4o1o713" path="res://Objects/Characters/Customer/gremlin_jud_pee(1).png" id="1_x3qis"]
+[ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="2_8n002"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_17rdo"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_x3qis")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[node name="Customer" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.2, 0.2)
+sprite_frames = SubResource("SpriteFrames_17rdo")
+animation = &"walk"
+
+[node name="DialogInteraction" parent="." instance=ExtResource("2_8n002")]
+position = Vector2(1, 0)

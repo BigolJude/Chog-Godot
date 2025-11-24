@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://bhg3qbqbwun7r"]
 
-[ext_resource type="Script" path="res://Objects/Chog/Chog.cs" id="1_la234"]
+[ext_resource type="Script" path="res://Objects/Characters/Chog/Chog.cs" id="1_la234"]
 [ext_resource type="Texture2D" uid="uid://bh4lkbr5rqj6d" path="res://Objects/Content/chog.png" id="2_oepbu"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o4db8"]

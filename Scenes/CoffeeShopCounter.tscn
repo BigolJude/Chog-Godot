@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bxlwbdvag1egf"]
+[gd_scene load_steps=9 format=3 uid="uid://bxlwbdvag1egf"]
 
+[ext_resource type="Script" path="res://Scenes/CoffeeShopCounter.cs" id="1_8tuki"]
 [ext_resource type="Texture2D" uid="uid://m8ao8ykqbtge" path="res://Objects/Content/CoffeeCounterTemp.png" id="1_q5idm"]
 [ext_resource type="Texture2D" uid="uid://diew3mgyhe8ty" path="res://Objects/Content/CoffeeMachine.png" id="1_q8174"]
 [ext_resource type="PackedScene" uid="uid://bapjleydfyg7l" path="res://Objects/Interactions/Dialog.tscn" id="2_djism"]
-[ext_resource type="PackedScene" uid="uid://bhg3qbqbwun7r" path="res://Objects/Chog/Chog.tscn" id="3_ys3jl"]
+[ext_resource type="PackedScene" uid="uid://bhg3qbqbwun7r" path="res://Objects/Characters/Chog/Chog.tscn" id="3_ys3jl"]
 [ext_resource type="PackedScene" uid="uid://b101bqfrnsrqk" path="res://Objects/GUI/GUI.tscn" id="5_gigq1"]
 [ext_resource type="PackedScene" uid="uid://ciep1l57gnm4a" path="res://Objects/Inventory/InventoryUI.tscn" id="6_3kev6"]
 
@@ -12,6 +13,7 @@ a = Vector2(-3, 651)
 b = Vector2(1158, 646)
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("1_8tuki")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(782, 528)

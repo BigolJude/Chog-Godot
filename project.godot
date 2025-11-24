@@ -12,12 +12,12 @@ config_version=5
 
 config/name="Chog"
 run/main_scene="res://Scenes/Beginning.tscn"
-config/features=PackedStringArray("4.3", "C#", "GL Compatibility")
+config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-ChogData="*res://Objects/Chog/ChogData.cs"
+ChogData="*res://Objects/Characters/Chog/ChogData.cs"
 
 [display]
 
