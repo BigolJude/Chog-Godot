@@ -1,10 +1,9 @@
 using Godot;
-using System;
 
 public partial class Beginning : Node2D
 {
-	private const string GUI_LOCATION = "GUI"; 
-	private const string BEGINNING_DIALOG = "Beginning";
+	private const string GUI_LOCATION = "GUI";
+	private const string BEGINNING_DIALOG = "Beginning/Dialog/Beginning.xml";
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

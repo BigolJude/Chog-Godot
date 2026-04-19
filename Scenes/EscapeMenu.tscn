@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://lhialu4vr6jf"]
 
-[ext_resource type="Script" path="res://Scenes/MenuLogic/EscapeMenu.cs" id="1_2m6kn"]
+[ext_resource type="Script" uid="uid://drx3lh5j6svx7" path="res://Scenes/Logic/EscapeMenu.cs" id="1_2m6kn"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_of3ed"]
 

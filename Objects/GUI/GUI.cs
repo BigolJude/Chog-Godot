@@ -24,21 +24,31 @@ public partial class GUI : Control
 			internal const string LABEL = CONTAINER + "/" + CHATBOX_PREFIX + "Label";
 			internal const string DIALOG_SCROLL_DELAY_TIMER = CONTAINER + "/" + "DialogScrollDelay";
 		}
+
 	}
 	private struct Interaction
 	{
-		internal const string LABEL = "Interaction_Container/InteractionNotif_Label";
-		internal const string LABEL_TEXT = "Press F to {0}.";
+		internal const string LABEL = "Interaction_Container/InteractionNotif_Label",
+						  LABEL_TEXT = "Press F to {0}.";
 	}
 	private struct Challenge
 	{
 		private const string CHALLENGE_PREFIX = "Challenge_";
-		internal const string CONTAINER = CHALLENGE_PREFIX + "Container";
+		internal const string CONTAINER = CHALLENGE_PREFIX + "Container",
+							  CHECKER_CONTAINER = "Checker_Container";
+
+
 		internal struct Container
 		{
-			internal const string LINE_EDIT = CONTAINER + "/" + CHALLENGE_PREFIX + "TextBox";
-			internal const string CANCEL = CONTAINER + "/" + CHALLENGE_PREFIX + "Cancel";
-			internal const string SUBMIT = CONTAINER + "/" + CHALLENGE_PREFIX + "Submit";
+			internal const string LINE_EDIT = CONTAINER + "/" + CHALLENGE_PREFIX + "TextBox",
+								  LINE_CHECKER = CHECKER_CONTAINER + "/" + CHALLENGE_PREFIX + "Checker",
+								  CANCEL = CONTAINER + "/" + CHALLENGE_PREFIX + "Cancel",
+								  SUBMIT = CONTAINER + "/" + CHALLENGE_PREFIX + "Submit";
+		}
+		internal struct CheckerLabels
+		{
+			internal const string INCORRECT = "[color=red]{0}[/color]",
+								  CORRECT = "[color=green]{0}[/color]";
 		}
 	}
 	private const bool HIDE = false;
@@ -97,23 +107,23 @@ public partial class GUI : Control
 		switch (type)
 		{
 			case InteractionType.Dialog:
-			{
-				ChangeControlNodeVisibility(ChatBox.CONTAINER, SHOW);
-				DialogTree = new DialogTree(interactionDescription);
-				DisplayDialogOptions();
-				break;
-			}
+				{
+					ChangeControlNodeVisibility(ChatBox.CONTAINER, SHOW);
+					DialogTree = new DialogTree(interactionDescription);
+					DisplayDialogOptions();
+					break;
+				}
 			case InteractionType.Entrance:
-			{
-				SceneHelper.TransitionScene(this, interactionDescription);
-				break;
-			}
+				{
+					SceneHelper.TransitionScene(this, interactionDescription);
+					break;
+				}
 			case InteractionType.Item:
-			{
-				int itemCode = interactionDescription.ToInt();
-				GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerInventory.AddItem(itemCode);
-				break;
-			}
+				{
+					int itemCode = interactionDescription.ToInt();
+					GetNode<ChogData>(GlobalStrings.ChogDataLocation).PlayerInventory.AddItem(itemCode);
+					break;
+				}
 		}
 	}
 
@@ -158,45 +168,46 @@ public partial class GUI : Control
 		switch (dialog.Type)
 		{
 			case DialogType.Exit:
-			{
-				GD.Print("Exited");
-				ResetDialog();
-				GetNode<Chog>(CHOG).Frozen = false;
-				return;
-			}
+				{
+					GD.Print("Exited");
+					ResetDialog();
+					GetNode<Chog>(CHOG).Frozen = false;
+					return;
+				}
 			case DialogType.Event:
-			{
-				GD.Print("Event");
-				DialogEvent dialogEvent = (DialogEvent)dialog;
-				EmitSignal(SignalName.OnInteractionEvent, dialogEvent.EventData);
-				GetNode<Chog>(CHOG).Frozen = false;
-				ResetDialog();
-				return;
-			}
+				{
+					GD.Print("Event");
+					DialogEvent dialogEvent = (DialogEvent)dialog;
+					EmitSignal(SignalName.OnInteractionEvent, dialogEvent.EventData);
+					GetNode<Chog>(CHOG).Frozen = false;
+					ResetDialog();
+					return;
+				}
 			case DialogType.Transition:
-			{
-				GD.Print("Transitions");
-				DialogEvent dialogEvent = (DialogEvent)dialog;
-				SceneHelper.TransitionScene(this, dialogEvent.EventData);
-				GetNode<Chog>(CHOG).Frozen = false;
-				ResetDialog();
-				return;
-			}
+				{
+					GD.Print("Transitions");
+					DialogEvent dialogEvent = (DialogEvent)dialog;
+					SceneHelper.TransitionScene(this, dialogEvent.EventData);
+					GetNode<Chog>(CHOG).Frozen = false;
+					ResetDialog();
+					return;
+				}
 			case DialogType.Challenge:
-			{
-				GD.Print("Challenge");
-				ChangeControlNodeVisibility(Challenge.CONTAINER, SHOW);
-				ChangeControlNodeVisibility(ChatBox.CONTAINER, HIDE);
-				GD.Print("Showing container");
-				break;
-			}
+				{
+					GD.Print("Challenge");
+					ChangeControlNodeVisibility(Challenge.CONTAINER, SHOW);
+					ChangeControlNodeVisibility(Challenge.CHECKER_CONTAINER, SHOW);
+					ChangeControlNodeVisibility(ChatBox.CONTAINER, HIDE);
+					GD.Print("Showing container");
+					break;
+				}
 			case DialogType.None:
-			{
-				GetNode<Label>(ChatBox.Container.LABEL).Text = string.Empty;
-				GetNode<Timer>(ChatBox.Container.DIALOG_SCROLL_DELAY_TIMER).Start();
-				DialogTree.Forwards(dialog);
-				break;
-			}
+				{
+					GetNode<Label>(ChatBox.Container.LABEL).Text = string.Empty;
+					GetNode<Timer>(ChatBox.Container.DIALOG_SCROLL_DELAY_TIMER).Start();
+					DialogTree.Forwards(dialog);
+					break;
+				}
 		}
 
 		chatList.Clear();
@@ -238,7 +249,41 @@ public partial class GUI : Control
 	private void ChallengeReset()
 	{
 		GetNode<LineEdit>(Challenge.Container.LINE_EDIT).Text = string.Empty;
+		GetNode<RichTextLabel>(Challenge.Container.LINE_CHECKER).Text = string.Empty;
 		ChangeControlNodeVisibility(ChatBox.CONTAINER, SHOW);
 		ChangeControlNodeVisibility(Challenge.CONTAINER, HIDE);
+		ChangeControlNodeVisibility(Challenge.CHECKER_CONTAINER, HIDE);
+	}
+
+	private void OnChallengeTextChanged(string newText)
+	{
+		LineEdit ChallengeTextBox = GetNode<LineEdit>(Challenge.Container.LINE_EDIT);
+		RichTextLabel ChallengeChecker = GetNode<RichTextLabel>(Challenge.Container.LINE_CHECKER);
+
+		string[] ChallengeTextWords = ChallengeTextBox.Text.Split(' '),
+					ChallengeAnswerWords = ((DialogEvent)DialogTree.CurrentDialog).EventData.Split(' ');
+
+		string ChallengeTextFormatted = string.Empty;
+
+		for (int i = 0; i <= (ChallengeTextWords.Length - 1); i++)
+		{
+
+			if (i > ChallengeAnswerWords.Length - 1)
+			{
+				ChallengeTextFormatted = ChallengeTextFormatted + string.Format(Challenge.CheckerLabels.INCORRECT, ChallengeTextWords[i]) + ' ';
+				continue;
+			}
+
+			if (ChallengeTextWords[i].Equals(ChallengeAnswerWords[i]))
+			{
+				ChallengeTextFormatted = ChallengeTextFormatted + string.Format(Challenge.CheckerLabels.CORRECT, ChallengeTextWords[i]) + ' ';
+			}
+			else
+			{
+				ChallengeTextFormatted = ChallengeTextFormatted + string.Format(Challenge.CheckerLabels.INCORRECT, ChallengeTextWords[i]) + ' ';
+			}
+
+		}
+		ChallengeChecker.Text = ChallengeTextFormatted;
 	}
 }

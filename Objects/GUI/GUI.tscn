@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b101bqfrnsrqk"]
 
-[ext_resource type="Script" path="res://Objects/GUI/GUI.cs" id="1_my2vy"]
+[ext_resource type="Script" uid="uid://nc4x6x3kmmie" path="res://Objects/GUI/GUI.cs" id="1_my2vy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_apmgi"]
 bg_color = Color(0.203922, 0.203922, 0.203922, 0.592157)
@@ -35,6 +35,27 @@ size_flags_vertical = 8
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 text = "Press F to interact."
+
+[node name="Checker_Container" type="VSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -336.0
+offset_top = -95.0
+offset_right = 340.0
+offset_bottom = -67.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Challenge_Checker" type="RichTextLabel" parent="Checker_Container"]
+z_index = 1
+clip_contents = false
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
 
 [node name="ChatBox_Container" type="VSplitContainer" parent="."]
 layout_mode = 1
@@ -79,7 +100,6 @@ grow_vertical = 0
 
 [node name="Challenge_TextBox" type="LineEdit" parent="Challenge_Container"]
 layout_mode = 2
-alignment = 1
 
 [node name="Challenge_Options" type="HSplitContainer" parent="Challenge_Container"]
 custom_minimum_size = Vector2(660, 0)
@@ -100,5 +120,6 @@ text = "Accept"
 
 [connection signal="item_selected" from="ChatBox_Container/ChatBox_ItemList" to="." method="OnItemListSelected"]
 [connection signal="timeout" from="ChatBox_Container/DialogScrollDelay" to="." method="OnDialogScrollDelayTimeout"]
+[connection signal="text_changed" from="Challenge_Container/Challenge_TextBox" to="." method="OnChallengeTextChanged"]
 [connection signal="pressed" from="Challenge_Container/Challenge_Options/Challenge_Cancel" to="." method="ChallengeCancelPressed"]
 [connection signal="pressed" from="Challenge_Container/Challenge_Options/Challenge_Submit" to="." method="ChallengeSubmitPressed"]

@@ -25,7 +25,7 @@ shape = SubResource("SegmentShape2D_nu1yr")
 position = Vector2(997, 590)
 Name = "enter Scene 1"
 Type = 2
-Description = "TestScene"
+Description = "TestScene_1/TestScene"
 Repeatable = true
 
 [node name="Chog" parent="." instance=ExtResource("1_u2shf")]
@@ -34,7 +34,7 @@ Repeatable = true
 position = Vector2(585, 602)
 Name = "chat with me!"
 Type = 1
-Description = "DialogTest2"
+Description = "TestScene_2/Dialog/DialogTest2.xml"
 
 [node name="Label" type="Label" parent="."]
 offset_left = 8.0
