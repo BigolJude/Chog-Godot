@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://b101bqfrnsrqk"]
+[gd_scene format=3 uid="uid://b101bqfrnsrqk"]
 
 [ext_resource type="Script" uid="uid://nc4x6x3kmmie" path="res://Objects/GUI/GUI.cs" id="1_my2vy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_apmgi"]
 bg_color = Color(0.203922, 0.203922, 0.203922, 0.592157)
 
-[node name="GUI" type="Control"]
+[node name="GUI" type="Control" unique_id=96536326]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1154.0
@@ -14,7 +14,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 script = ExtResource("1_my2vy")
 
-[node name="Interaction_Container" type="HSplitContainer" parent="."]
+[node name="Interaction_Container" type="HSplitContainer" parent="." unique_id=1347741891]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -28,7 +28,7 @@ offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="InteractionNotif_Label" type="Label" parent="Interaction_Container"]
+[node name="InteractionNotif_Label" type="Label" parent="Interaction_Container" unique_id=476425616]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
@@ -36,7 +36,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 text = "Press F to interact."
 
-[node name="Checker_Container" type="VSplitContainer" parent="."]
+[node name="Checker_Container" type="VSplitContainer" parent="." unique_id=297336181]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -50,14 +50,14 @@ offset_bottom = -67.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Challenge_Checker" type="RichTextLabel" parent="Checker_Container"]
+[node name="Challenge_Checker" type="RichTextLabel" parent="Checker_Container" unique_id=1863321307]
 z_index = 1
 clip_contents = false
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 
-[node name="ChatBox_Container" type="VSplitContainer" parent="."]
+[node name="ChatBox_Container" type="VSplitContainer" parent="." unique_id=1613999544]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -71,20 +71,20 @@ offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="ChatBox_Label" type="Label" parent="ChatBox_Container"]
+[node name="ChatBox_Label" type="Label" parent="ChatBox_Container" unique_id=213085496]
 layout_mode = 2
 theme_type_variation = &"TooltipLabel"
 theme_override_styles/normal = SubResource("StyleBoxFlat_apmgi")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ChatBox_ItemList" type="ItemList" parent="ChatBox_Container"]
+[node name="ChatBox_ItemList" type="ItemList" parent="ChatBox_Container" unique_id=765578909]
 layout_mode = 2
 
-[node name="DialogScrollDelay" type="Timer" parent="ChatBox_Container"]
+[node name="DialogScrollDelay" type="Timer" parent="ChatBox_Container" unique_id=1646801631]
 wait_time = 0.05
 
-[node name="Challenge_Container" type="VSplitContainer" parent="."]
+[node name="Challenge_Container" type="VSplitContainer" parent="." unique_id=518231350]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -98,21 +98,26 @@ offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Challenge_TextBox" type="LineEdit" parent="Challenge_Container"]
+[node name="Challenge_TextBox" type="LineEdit" parent="Challenge_Container" unique_id=1740907911]
 layout_mode = 2
 
-[node name="Challenge_Options" type="HSplitContainer" parent="Challenge_Container"]
+[node name="Challenge_Options" type="HSplitContainer" parent="Challenge_Container" unique_id=513139500]
 custom_minimum_size = Vector2(660, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+split_offsets = PackedInt32Array(100, 548)
+split_offset = 100
 
-[node name="Challenge_Cancel" type="Button" parent="Challenge_Container/Challenge_Options"]
+[node name="Challenge_Cancel" type="Button" parent="Challenge_Container/Challenge_Options" unique_id=470069197]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Cancel"
 
-[node name="Challenge_Submit" type="Button" parent="Challenge_Container/Challenge_Options"]
+[node name="Character_Container" type="HSplitContainer" parent="Challenge_Container/Challenge_Options" unique_id=587505366]
+layout_mode = 2
+
+[node name="Challenge_Submit" type="Button" parent="Challenge_Container/Challenge_Options" unique_id=2021054361]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 8
