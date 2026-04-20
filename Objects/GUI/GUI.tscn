@@ -116,6 +116,8 @@ text = "Cancel"
 
 [node name="Character_Container" type="HSplitContainer" parent="Challenge_Container/Challenge_Options" unique_id=587505366]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="Challenge_Submit" type="Button" parent="Challenge_Container/Challenge_Options" unique_id=2021054361]
 custom_minimum_size = Vector2(100, 0)

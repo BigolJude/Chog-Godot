@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://bhg3qbqbwun7r"]
+[gd_scene format=3 uid="uid://bhg3qbqbwun7r"]
 
-[ext_resource type="Script" path="res://Objects/Characters/Chog/Chog.cs" id="1_la234"]
+[ext_resource type="Script" uid="uid://bk7au85itynhd" path="res://Objects/Characters/Chog/Chog.cs" id="1_la234"]
 [ext_resource type="Texture2D" uid="uid://bh4lkbr5rqj6d" path="res://Objects/Content/chog.png" id="2_oepbu"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o4db8"]
@@ -18,16 +18,16 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Chog" type="CharacterBody2D"]
+[node name="Chog" type="CharacterBody2D" unique_id=2050239610]
 position = Vector2(300, 300)
 scale = Vector2(0.5, 0.5)
 script = ExtResource("1_la234")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1510588183]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_o4db8")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1265015903]
 scale = Vector2(0.33, 0.33)
 sprite_frames = SubResource("SpriteFrames_b2vvd")
 animation = &"walk"
