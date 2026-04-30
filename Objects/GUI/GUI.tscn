@@ -27,6 +27,8 @@ offset_right = 77.0
 offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
+dragging_enabled = false
+dragger_visibility = 1
 
 [node name="InteractionNotif_Label" type="Label" parent="Interaction_Container" unique_id=476425616]
 layout_mode = 2
@@ -49,6 +51,8 @@ offset_right = 340.0
 offset_bottom = -67.0
 grow_horizontal = 2
 grow_vertical = 0
+dragging_enabled = false
+dragger_visibility = 1
 
 [node name="Challenge_Checker" type="RichTextLabel" parent="Checker_Container" unique_id=1863321307]
 z_index = 1
@@ -70,6 +74,8 @@ offset_right = 340.0
 offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
+dragging_enabled = false
+dragger_visibility = 1
 
 [node name="ChatBox_Label" type="Label" parent="ChatBox_Container" unique_id=213085496]
 layout_mode = 2
@@ -97,6 +103,8 @@ offset_right = 340.0
 offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
+dragging_enabled = false
+dragger_visibility = 1
 
 [node name="Challenge_TextBox" type="LineEdit" parent="Challenge_Container" unique_id=1740907911]
 layout_mode = 2
@@ -106,6 +114,7 @@ custom_minimum_size = Vector2(660, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 split_offsets = PackedInt32Array(100, 548)
+dragger_visibility = 1
 split_offset = 100
 
 [node name="Challenge_Cancel" type="Button" parent="Challenge_Container/Challenge_Options" unique_id=470069197]

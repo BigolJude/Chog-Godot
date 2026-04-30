@@ -31,7 +31,7 @@ shape = SubResource("SegmentShape2D_nu1yr")
 position = Vector2(84, 597)
 Name = "enter scene 2"
 Type = 2
-Description = "TestScene2"
+Description = "TestScene_2/TestScene2"
 Repeatable = true
 
 [node name="RedBook" parent="." unique_id=508793256 instance=ExtResource("3_5thp7")]
